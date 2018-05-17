@@ -1,0 +1,17 @@
+Documentation of the three main steps to get transmitters and recievers to communicate.
+March 8, 2018
+Step 1-Transmitter Side
+Our first challenge is that the reciever is expecting a signal modualting at 38kHz. Our transmitter is an IR LED that is not modulated. For a 38kHz frequency the period is about 26 microseconds. 
+There is a timer already implemented in the board, one "tick" of the timer is about 2.6 microseconds. 10 ticks on the timer would be about 26 microseconds. We want to have a function will toggle the Transmitter ON/OFF every 5 ticks to achieve a signal modulating at 38kHz.
+When this step is complete we will be able to transmit a signal (38kHz) that can be recieved and understood by the reciever.
+
+Step 2 - Transmitter Side
+By this point we are able to transmit a signal that modulates at 38kHz. 
+Now our goal is have basic communication with the reciever. 
+We do this by sending a series of bits (1's and 0's). The super loop of the board is 1ms. We are going to send a bit every 5 ms, so every fifth cycle of the loop. That means that for each bit of logic ideally there should be 5 ONs or OFFs  in row where the super loop can identify that logic. We want to run each bit five times in row to validate that it is a correct input signal that we want the reciever to pick up. It could also be acceptable for only 4 of the 5 ms of the bit to transmitt correctly because in the worst case the timing could be off and miss the last iteration of that bit in the super loop.
+NOTE: is that we probably need a "start bit". This would be a 1 bit in front of our other logic, this is to signify to the reciever to leave "idle mode" and start recieving data.
+NOTE: The transmitter is an output. Use the same configurations of the registers as the LEDs use. This is the only GPIO configuring for this step.
+When this step is complete the transmitter should be able to reliably send a bit of logic every 5ms. 
+Step 3 - Reciever Side
+The reciever is expecting to recieve a signal modulated at 38kHz, by now our transmitter should be able to send these signals. For each ON or OFF the signal recieved will last 5ms. The super loop occurs every 1ms.  That means the reciever can expect to see 5 (Potenially only  4)ON or OFFs in row over the course of 5ms and when that happens that is the equivalent of 1 bit of logic.
+NOTE: The reciever is an input. Use the same configurations of the registers that the Buttons use. This is the only GPIO configuring for this step.

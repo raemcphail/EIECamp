@@ -1,0 +1,1 @@
+Updated registers in eief1-pcb-01.h to enable SCL to be an output register for transmitter, unfortunatley, SCL should be the input from the reciever, because of location. To switch tomorrow too another pin, and modify SCL to an actual input GPIO.

@@ -1,0 +1,30 @@
+End Goal:
+A reciever and transmitter on each board, can hit other boards and do software stuff, more to come.
+notes:
+we need to check if we can transmit at the correct modularity rate for the reciever to pick it up 38khz
+need to look at spi perf and see what clock it can do
+spi appears to be in memory space 0x40008000 for SAM3U Memory according to data sheet.
+http://asf.atmel.com/docs/latest/applications.html
+SPI Example: http://asf.atmel.com/docs/latest/sam.drivers.spi.example.sam3u_ek/html/index.html
+FOUND OP. FREQ:
+http://asf.atmel.com/docs/latest/sam.drivers.spi.example.sam3u_ek/html/sam3u__ek_8h.html#ae9cca1603768bb2e6c82bd0ccedf2b5c
+sam3u_ssp.c has configuration of spi.
+3 Plans:
+Plan A:
+We can adjust the SPI on the board(which uses the MCK(master clock)) to the correct frequency, of 38khz, and test by using an ocellescope
+and asking a lab tech for help but we basically probe one end to the right port on the board and put the other end to GND and see what output signal we get.
+**check out what output signal we want based on reciever**
+
+Plan B:
+555 timer is an addon circuit that could help with timing
+(this one sucks) Low level reconfiguration of the LED driver, need custom modulation and PWM to get the 38khz the receiver needs. make a custom count for loop, 
+instead of the 1ms superloop.
+
+Plan C:
+Get a remote that works, skip plan B if A fails after long time. There is the IR Control Kit Hookup Guide from sparkfun, OR find a compatable remote by testing
+if a signal is recieved by the reciever.
+
+**Need to time manage, predict time (spike tasks) for errors and testing, debugging with our 3 week period
+March 2: determine what parts to order, will come monday, over weekend set up software interface.
+Where do we plug in transmitter and reciever?
+https://www.sparkfun.com/products/241
