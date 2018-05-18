@@ -377,7 +377,7 @@ State Machine Function Definitions
 */
 static void ComSM_Idle(void)
 {
-    
+    LedOn(CYAN);
     Com_StateMachine = ComSM_TransmitWhite;
     u16countSentBit = 0;
 } // end ComSM_Idle() 
@@ -404,13 +404,16 @@ static void ComSM_ReceiverMode(void)
 
 static void ComSM_ReceiveWhite(void)
 {
-  receivingLowBit();
+  LedOn(CYAN);
+  //receivingLowBit();
   if(u16countReceivedBit == 0)
   {
+   
     receivingHighBit();
   }
   else if(u16countReceivedBit == 1)
   {
+    LedOn(YELLOW);
     receivingLowBit();
   }
   else if (u16countReceivedBit == 2)
@@ -441,6 +444,7 @@ static void ComSM_ReceiveWhite(void)
 //The following transmit states let the user scroll through each different colour to select one to transmit
 static void ComSM_TransmitWhite(void)
 {
+  LedOn(GREEN);
   LedOn(WHITE);
   LedOff(PURPLE);
   LedOff(RED);
@@ -454,13 +458,18 @@ static void ComSM_TransmitWhite(void)
      ButtonAcknowledge(BUTTON2);
     Com_StateMachine = ComSM_TransmitPurple;
   }
-  if(WasButtonPressed(BUTTON3))
-  {
-    ButtonAcknowledge(BUTTON3);
-    LedOff(WHITE);
-    Com_StateMachine = ComSM_ReceiverMode;
+ if(WasButtonPressed(BUTTON3))
+ {
+  LedOn(BLUE);
+  ButtonAcknowledge(BUTTON3);
+  Com_StateMachine = ComSM_ReceiverMode;
   }
+  
   if(IsButtonPressed(BUTTON0))
+  {
+    OnBit();
+  }
+ /* if(IsButtonPressed(BUTTON0))
   {
     if(u16countSentBit == 0)
     {  
@@ -494,7 +503,7 @@ static void ComSM_TransmitWhite(void)
       LedOn(CYAN);
       u16countSentBit = 0;
     }
-  }
+  }*/
 }
 
 static void ComSM_TransmitPurple(void)
