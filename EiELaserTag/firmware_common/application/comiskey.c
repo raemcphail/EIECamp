@@ -251,7 +251,7 @@ Promises:
 */
 void OnBit(void)
 {
-  LedOff(WHITE);
+  LedOn(GREEN);
   TimerStart(TIMER_CHANNEL1);
    
   if(u16Count5ms >= 4)
@@ -377,6 +377,8 @@ State Machine Function Definitions
 */
 static void ComSM_Idle(void)
 {
+    TimerStop(TIMER_CHANNEL1);
+    Com_ModulateSwitch = FALSE;
     Com_StateMachine = ComSM_TransmitWhite;
     u16countSentBit = 0;
 } // end ComSM_Idle() 
@@ -403,8 +405,8 @@ static void ComSM_ReceiverMode(void)
 
 static void ComSM_ReceiveWhite(void)
 {
-  //receivingLowBit();
-  if(u16countReceivedBit == 0)
+  receivingHighBit();
+  /*if(u16countReceivedBit == 0)
   {
     receivingHighBit();
   }
@@ -433,7 +435,7 @@ static void ComSM_ReceiveWhite(void)
   {
     LedOn(WHITE);
     u16countReceivedBit = 0;
-  }
+  }*/
   
  
 }
@@ -464,6 +466,11 @@ static void ComSM_TransmitWhite(void)
   if(IsButtonPressed(BUTTON0))
   {
     OnBit();
+  }
+  else
+  {
+    TimerStop(TIMER_CHANNEL1);
+    Com_ModulateSwitch = FALSE;
   }
  /* if(IsButtonPressed(BUTTON0))
   {
