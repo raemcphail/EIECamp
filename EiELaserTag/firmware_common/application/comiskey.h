@@ -1,5 +1,5 @@
 /**********************************************************************************************************************
-File: LaserTag.h                                                                
+File: comiskey.h                                                                
 
 ----------------------------------------------------------------------------------------------------------------------
 
@@ -8,12 +8,12 @@ TODO: Investigate the configuration.h file as stated above.
 ----------------------------------------------------------------------------------------------------------------------
 
 Description:
-Header file for LaserTag.c
+Header file for comiskey.c
 
 **********************************************************************************************************************/
 
-#ifndef __LASER_TAG_H
-#define __LASER_TAG_H
+#ifndef __COMISKEY_H
+#define __COMISKEY_H
 
 /**********************************************************************************************************************
 Type Definitions
@@ -51,14 +51,18 @@ Function Declarations
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Public functions                                                                                                   */
 /*--------------------------------------------------------------------------------------------------------------------*/
-void LaserTagToggler(void);
-void gotShot(void);
+//void LaserTagToggler(void);
+void receivingSignal(void);
+void Com_38Modulate(void);
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Protected functions                                                                                                */
 /*--------------------------------------------------------------------------------------------------------------------*/
-void LaserTagInitialize(void);
-void LaserTagRunActiveState(void);
+//void LaserTagInitialize(void);
+//void LaserTagRunActiveState(void);
+void ComInitialize(void);
+void ComRunActiveState(void);
+void Com_38Modulate(void);
 void EnableInterruptReg(void);
 void reset(void);
 
@@ -69,14 +73,13 @@ void reset(void);
 /***********************************************************************************************************************
 State Machine Declarations
 ***********************************************************************************************************************/
-static void LaserTagSM_Idle(void);    
-static void LaserTagSM_Error(void);         
-static void LaserTagSM_ModulateOn(void);
-static void LaserTagSM_ModulateOff(void);
-static void LaserTagSM_Recover(void);
-static void LaserTagSM_DeadState(void);
-
-#endif /* __LASER_TAG_H */
+static void ComSM_ModulateOn(void);
+static void ComSM_ModulateOff(void);
+static void ComSM_Idle(void);
+static void ComSM_Error(void);
+static void ComSM_TransmitWhite(void);
+static void ComSM_TransmitPurple(void);
+#endif /* __COMISKEY_H */
 
 
 /*--------------------------------------------------------------------------------------------------------------------*/

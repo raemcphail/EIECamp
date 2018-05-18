@@ -72,6 +72,7 @@ the 1ms period.
   /* Application initialization */
 
   LaserTagInitialize();
+  ComInitialize();
   UserApp2Initialize();
   UserApp3Initialize();
 
@@ -101,7 +102,8 @@ the 1ms period.
     SdCardRunActiveState();
 
     /* Applications */
-    LaserTagRunActiveState();
+    //LaserTagRunActiveState();
+    ComRunActiveState();
     UserApp2RunActiveState();
     UserApp3RunActiveState();
     
