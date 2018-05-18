@@ -95,50 +95,7 @@ void Com_38Modulate(void)
   *pu32ToggleGPIO = PA_10_I2C_SCL;
 }
 /* end of Com_38Modulate*/
-/*------------------------------------------------------------
-Function: receivingSignal
-Description:
-Checks if the modulated signal of 38 kHz is received by the GPIO pin PA_14_BLADE_MOSI.
-Requires:
-PA_14_BLADE_MOSI is configured correctly as an input pin, must check if receives voltage HIGH
-for 5 ms, then VOLTAGE LOW for 5ms, then register that it has been hit and turn an LED on for a bit.
 
-Promises:
-Return true if the signal has been received.
-*/
-void receivingSignal(void)
-{
-    LedOn(PURPLE);
-    u32 *pu32Address;
-    pu32Address = (u32*)(&(AT91C_BASE_PIOA->PIO_PDSR));
-    u32 u32truthValue = (*pu32Address) & 0x00004000;
-    //rHigh is the boolean that indicates if the receiver detects a signal
-    bool rHigh = TRUE;
-    if(u32truthValue == 0x00004000)
-    {
-      rHigh = FALSE;
-    }
-    if (u16countHigh ==5 && u16countLow==5) 
-    {
-      u16countHigh = 0;
-      u16countLow = 0;
-      LedOn(WHITE);
-    }
-    else if (rHigh) 
-    {
-      u16countHigh++;
-    }
-    else if (!rHigh && u16countHigh!=5) 
-   {
-      u16countHigh = 0;
-      u16countLow = 0;
-   }
-   else if (!rHigh && u16countHigh==5) 
-    {
-      u16countLow++;
-    }
-    
-}
 
 /*------------------------------------------------------------
 Function: receivingHighBit
@@ -176,10 +133,7 @@ void receivingHighBit(void)
     {
       u16countHigh++;
     }
-    if(rHigh == 6)
-    {
-      LedOn(RED);
-    }
+   
     else if (!rHigh && u16countHigh!=5) //If signal is LOW and hasn't been HIGH for 5ms, reset
    {
       u16countReceivedBit = 0;
@@ -261,6 +215,7 @@ void OnBit(void)
   {
     u16Count5ms = 0;
     u16countSentBit++;  
+    u16countSentBit%=6;
   }
   else
   {
@@ -285,6 +240,7 @@ void OffBit(void)
   {
     u16Count5ms = 0;
     u16countSentBit++;
+    u16countSentBit%=6;
   }
   else
   {
@@ -413,22 +369,27 @@ static void ComSM_ReceiveWhite(void)
   }
   else if(u16countReceivedBit == 1)
   {
+    LedOn(YELLOW);
     receivingLowBit();
   }
   else if (u16countReceivedBit == 2)
   {
+    LedOn(GREEN);
     receivingHighBit();
   }
   else if (u16countReceivedBit == 3)
   {
+    LedOn(CYAN);
     receivingLowBit();
   }
   else if(u16countReceivedBit == 4)
   {
+    LedOn(BLUE);
     receivingHighBit();
   }
   else if(u16countReceivedBit == 5)
   {
+    LedOn(PURPLE);
     receivingLowBit();
   }
   else if(u16countReceivedBit == 6)
@@ -467,13 +428,13 @@ static void ComSM_TransmitWhite(void)
   {
     if(u16countSentBit == 0)
     {  
-      LedOn(YELLOW);
       OnBit();
     }
      if(u16countSentBit == 1)
     {  
       LedOn(GREEN);
-      LedOff(YELLOW);
+      TimerStop(TIMER_CHANNEL1);
+      Com_ModulateSwitch = FALSE;
       OffBit();
     }
       if(u16countSentBit == 2)
@@ -483,7 +444,9 @@ static void ComSM_TransmitWhite(void)
     }
     if(u16countSentBit == 3)
     {  
-     OffBit();
+      TimerStop(TIMER_CHANNEL1);
+      Com_ModulateSwitch = FALSE;
+      OffBit();
     }
     if(u16countSentBit == 4)
     {  
@@ -491,12 +454,10 @@ static void ComSM_TransmitWhite(void)
     }
     if(u16countSentBit == 5)
     {  
-      OffBit();
-    }
-    if(u16countSentBit == 6)
-    {  
       LedOn(CYAN);
-      u16countSentBit = 0;
+      TimerStop(TIMER_CHANNEL1);
+      Com_ModulateSwitch = FALSE;
+      OffBit();
     }
   }
   else
