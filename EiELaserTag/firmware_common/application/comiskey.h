@@ -54,6 +54,10 @@ Function Declarations
 //void LaserTagToggler(void);
 void receivingSignal(void);
 void Com_38Modulate(void);
+void receivingHighBit(void);
+void receivingLowBit(void);
+void OnBit(void);
+void OffBit(void);
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Protected functions                                                                                                */
@@ -65,6 +69,7 @@ void ComRunActiveState(void);
 void Com_38Modulate(void);
 void EnableInterruptReg(void);
 void reset(void);
+
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Private functions                                                                                                  */
@@ -79,6 +84,24 @@ static void ComSM_Idle(void);
 static void ComSM_Error(void);
 static void ComSM_TransmitWhite(void);
 static void ComSM_TransmitPurple(void);
+static void ComSM_TransmitBlue(void);
+static void ComSM_TransmitCyan(void);
+static void ComSM_TransmitGreen(void);
+static void ComSM_TransmitYellow(void);
+static void ComSM_TransmitOrange(void);
+static void ComSM_TransmitRed(void);
+
+static void ComSM_ReceiverMode(void);
+
+static void ComSM_ReceiveWhite(void);
+static void ComSM_ReceivePurple(void);
+static void ComSM_ReceiveBlue(void);
+static void ComSM_ReceiveCyan(void);
+static void ComSM_ReceiveGreen(void);
+static void ComSM_ReceiveYellow(void);
+static void ComSM_ReceiveOrange(void);
+static void ComSM_ReceiveRed(void);
+
 #endif /* __COMISKEY_H */
 
 
