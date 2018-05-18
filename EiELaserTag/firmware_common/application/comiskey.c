@@ -216,11 +216,11 @@ void receivingLowBit(void)
     }
     if(rHigh)
     {
-      LedOn(ORANGE);
+      LedOn(RED);
     }
      else
     {
-      LedOff(ORANGE);
+      LedOff(RED);
     }
     if (!rHigh) //if signal is LOW but hasn't been LOW for 5ms yet
     {
