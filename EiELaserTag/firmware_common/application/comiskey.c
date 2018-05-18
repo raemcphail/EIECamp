@@ -377,7 +377,6 @@ State Machine Function Definitions
 */
 static void ComSM_Idle(void)
 {
-    LedOn(CYAN);
     Com_StateMachine = ComSM_TransmitWhite;
     u16countSentBit = 0;
 } // end ComSM_Idle() 
@@ -404,11 +403,9 @@ static void ComSM_ReceiverMode(void)
 
 static void ComSM_ReceiveWhite(void)
 {
-  LedOn(CYAN);
   //receivingLowBit();
   if(u16countReceivedBit == 0)
   {
-   
     receivingHighBit();
   }
   else if(u16countReceivedBit == 1)
@@ -444,7 +441,6 @@ static void ComSM_ReceiveWhite(void)
 //The following transmit states let the user scroll through each different colour to select one to transmit
 static void ComSM_TransmitWhite(void)
 {
-  LedOn(GREEN);
   LedOn(WHITE);
   LedOff(PURPLE);
   LedOff(RED);
