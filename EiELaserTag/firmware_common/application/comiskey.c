@@ -176,6 +176,10 @@ void receivingHighBit(void)
     {
       u16countHigh++;
     }
+    if(rHigh == 6)
+    {
+      LedOn(RED);
+    }
     else if (!rHigh && u16countHigh!=5) //If signal is LOW and hasn't been HIGH for 5ms, reset
    {
       u16countReceivedBit = 0;
@@ -183,7 +187,7 @@ void receivingHighBit(void)
       u16countLow = 0;
    }
    
-      //if there has successfully been a high bit
+     //if there has successfully been a high bit
     if(u16countHigh ==5 && u16countLow==0) 
     {
       u16countReceivedBit++;
@@ -216,11 +220,11 @@ void receivingLowBit(void)
     }
     if(rHigh)
     {
-      LedOn(RED);
+      LedOn(ORANGE);
     }
      else
     {
-      LedOff(RED);
+      LedOff(ORANGE);
     }
     if (!rHigh) //if signal is LOW but hasn't been LOW for 5ms yet
     {
@@ -251,7 +255,6 @@ Promises:
 */
 void OnBit(void)
 {
-  LedOn(GREEN);
   TimerStart(TIMER_CHANNEL1);
    
   if(u16Count5ms >= 4)
@@ -276,7 +279,6 @@ Promises:
 */
 void OffBit(void)
 {
-  LedOff(WHITE);
   TimerStop(TIMER_CHANNEL1);
   Com_ModulateSwitch = FALSE;
   if(u16Count5ms >= 4)
@@ -406,7 +408,7 @@ static void ComSM_ReceiverMode(void)
 static void ComSM_ReceiveWhite(void)
 {
   receivingHighBit();
-  /*if(u16countReceivedBit == 0)
+  if(u16countReceivedBit == 0)
   {
     receivingHighBit();
   }
@@ -417,6 +419,7 @@ static void ComSM_ReceiveWhite(void)
   }
   else if (u16countReceivedBit == 2)
   {
+    LedOn(CYAN);
     receivingHighBit();
   }
   else if (u16countReceivedBit == 3)
@@ -435,7 +438,7 @@ static void ComSM_ReceiveWhite(void)
   {
     LedOn(WHITE);
     u16countReceivedBit = 0;
-  }*/
+  }
   
  
 }
@@ -465,7 +468,39 @@ static void ComSM_TransmitWhite(void)
   
   if(IsButtonPressed(BUTTON0))
   {
-    OnBit();
+    if(u16countSentBit == 0)
+    {  
+      LedOn(YELLOW);
+      OnBit();
+    }
+     if(u16countSentBit == 1)
+    {  
+      LedOn(GREEN);
+      LedOff(YELLOW);
+      OffBit();
+    }
+      if(u16countSentBit == 2)
+    {  
+      LedOn(GREEN);
+      OnBit();
+    }
+    if(u16countSentBit == 3)
+    {  
+     OffBit();
+    }
+    if(u16countSentBit == 4)
+    {  
+      OnBit();
+    }
+    if(u16countSentBit == 5)
+    {  
+      OffBit();
+    }
+    if(u16countSentBit == 6)
+    {  
+      LedOn(CYAN);
+      u16countSentBit = 0;
+    }
   }
   else
   {
