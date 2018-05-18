@@ -257,7 +257,7 @@ void OnBit(void)
 {
   TimerStart(TIMER_CHANNEL1);
    
-  if(u16Count5ms >= 4)
+  if(u16Count5ms >= 5)
   {
     u16Count5ms = 0;
     u16countSentBit++;  
@@ -407,19 +407,16 @@ static void ComSM_ReceiverMode(void)
 
 static void ComSM_ReceiveWhite(void)
 {
-  receivingHighBit();
   if(u16countReceivedBit == 0)
   {
     receivingHighBit();
   }
   else if(u16countReceivedBit == 1)
   {
-    LedOn(YELLOW);
     receivingLowBit();
   }
   else if (u16countReceivedBit == 2)
   {
-    LedOn(CYAN);
     receivingHighBit();
   }
   else if (u16countReceivedBit == 3)
@@ -507,41 +504,6 @@ static void ComSM_TransmitWhite(void)
     TimerStop(TIMER_CHANNEL1);
     Com_ModulateSwitch = FALSE;
   }
- /* if(IsButtonPressed(BUTTON0))
-  {
-    if(u16countSentBit == 0)
-    {  
-      LedOn(YELLOW);
-      OnBit();
-    }
-     if(u16countSentBit == 1)
-    {  
-      LedOn(PURPLE);
-      OffBit();
-    }
-    if(u16countSentBit == 2)
-    {  
-      LedOn(GREEN);
-      OnBit();
-    }
-    if(u16countSentBit == 3)
-    {  
-     OffBit();
-    }
-    if(u16countSentBit == 4)
-    {  
-      OnBit();
-    }
-    if(u16countSentBit == 5)
-    {  
-      OffBit();
-    }
-    if(u16countSentBit == 6)
-    {  
-      LedOn(CYAN);
-      u16countSentBit = 0;
-    }
-  }*/
 }
 
 static void ComSM_TransmitPurple(void)
