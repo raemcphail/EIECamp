@@ -208,9 +208,7 @@ Promises:
 
 */
 void OnBit(void)
-{
-  TimerStart(TIMER_CHANNEL1);
-   
+{   
   if(u16Count5ms >= 5)
   {
     u16Count5ms = 0;
@@ -234,9 +232,9 @@ Promises:
 */
 void OffBit(void)
 {
-  TimerStop(TIMER_CHANNEL1);
-  Com_ModulateSwitch = FALSE;
-  if(u16Count5ms >= 4)
+  //TimerStop(TIMER_CHANNEL1);
+  //Com_ModulateSwitch = FALSE;
+  if(u16Count5ms >= 5)
   {
     u16Count5ms = 0;
     u16countSentBit++;
@@ -414,7 +412,7 @@ static void ComSM_TransmitWhite(void)
   }
   if(WasButtonPressed(BUTTON2))
   {
-     ButtonAcknowledge(BUTTON2);
+    ButtonAcknowledge(BUTTON2);
     Com_StateMachine = ComSM_TransmitPurple;
   }
  if(WasButtonPressed(BUTTON3))
@@ -428,43 +426,44 @@ static void ComSM_TransmitWhite(void)
   {
     if(u16countSentBit == 0)
     {  
+      TimerStart(TIMER_CHANNEL1);
       OnBit();
     }
      if(u16countSentBit == 1)
     {  
-      LedOn(GREEN);
+      LedOn(YELLOW);
       TimerStop(TIMER_CHANNEL1);
       Com_ModulateSwitch = FALSE;
       OffBit();
     }
       if(u16countSentBit == 2)
     {  
+      TimerStart(TIMER_CHANNEL1);
       LedOn(GREEN);
       OnBit();
     }
     if(u16countSentBit == 3)
-    {  
-      TimerStop(TIMER_CHANNEL1);
-      Com_ModulateSwitch = FALSE;
-      OffBit();
-    }
-    if(u16countSentBit == 4)
-    {  
-      OnBit();
-    }
-    if(u16countSentBit == 5)
     {  
       LedOn(CYAN);
       TimerStop(TIMER_CHANNEL1);
       Com_ModulateSwitch = FALSE;
       OffBit();
     }
+    if(u16countSentBit == 4)
+    {  
+      TimerStart(TIMER_CHANNEL1);
+      LedOn(PURPLE);
+      OnBit();
+    }
+    if(u16countSentBit == 5)
+    {  
+      LedOn(RED);
+      TimerStop(TIMER_CHANNEL1);
+      Com_ModulateSwitch = FALSE;
+      OffBit();
+    }
   }
-  else
-  {
-    TimerStop(TIMER_CHANNEL1);
-    Com_ModulateSwitch = FALSE;
-  }
+
 }
 
 static void ComSM_TransmitPurple(void)
