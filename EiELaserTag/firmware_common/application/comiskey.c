@@ -120,14 +120,6 @@ void receivingHighBit(void)
     {
       rHigh = FALSE;
     }
-    if(rHigh)
-    {
-      LedOn(ORANGE);
-    }
-     else
-    {
-      LedOff(ORANGE);
-    }
  
    if (rHigh) //if signal is HIGH but hasn't been HIGH for 5ms yet
     {
@@ -171,14 +163,6 @@ void receivingLowBit(void)
     if(u32truthValue == 0x00004000)
     {
       rHigh = FALSE;
-    }
-    if(rHigh)
-    {
-      LedOn(ORANGE);
-    }
-     else
-    {
-      LedOff(ORANGE);
     }
     if (!rHigh) //if signal is LOW but hasn't been LOW for 5ms yet
     {
@@ -389,15 +373,16 @@ static void ComSM_ReceiveWhite(void)
   }
   else if(u16countReceivedBit == 6)
   {
+    LedOn(WHITE);
     u16countReceivedBit = 0;
     Com_StateMachine = ComSM_ReceivePurple;
   }
 }
 
-//The expected bit pattern for white is 101010
+//The expected bit pattern for purple is 110110
 static void ComSM_ReceivePurple(void)
 {
-  LedOn(WHITE);
+
   if(u16countReceivedBit == 0)
   {
     receivingHighBit();
@@ -424,6 +409,220 @@ static void ComSM_ReceivePurple(void)
   }
   else if(u16countReceivedBit == 6)
   {
+    LedOn(PURPLE);
+    u16countReceivedBit = 0;
+    Com_StateMachine = ComSM_ReceiveBlue;
+  }
+}
+
+//The expected bit pattern for blue is 110000
+static void ComSM_ReceiveBlue(void)
+{
+  if(u16countReceivedBit == 0)
+  {
+    receivingHighBit();
+  }
+  else if(u16countReceivedBit == 1)
+  {
+    receivingHighBit();
+  }
+  else if (u16countReceivedBit == 2)
+  {
+    receivingLowBit();
+  }
+  else if (u16countReceivedBit == 3)
+  {
+    receivingLowBit();
+  }
+  else if(u16countReceivedBit == 4)
+  {
+    receivingLowBit();
+  }
+  else if(u16countReceivedBit == 5)
+  {
+    receivingLowBit();
+  }
+  else if(u16countReceivedBit == 6)
+  {
+    LedOn(BLUE);
+    u16countReceivedBit = 0;
+    Com_StateMachine = ComSM_ReceiveCyan;
+  }
+}
+
+//The expected bit pattern for cyan is 111110
+static void ComSM_ReceiveCyan(void)
+{
+  if(u16countReceivedBit == 0)
+  {
+    receivingHighBit();
+  }
+  else if(u16countReceivedBit == 1)
+  {
+    receivingHighBit();
+  }
+  else if (u16countReceivedBit == 2)
+  {
+    receivingHighBit();
+  }
+  else if (u16countReceivedBit == 3)
+  {
+    receivingHighBit();
+  }
+  else if(u16countReceivedBit == 4)
+  {
+    receivingHighBit();
+  }
+  else if(u16countReceivedBit == 5)
+  {
+    receivingLowBit();
+  }
+  else if(u16countReceivedBit == 6)
+  {
+    LedOn(CYAN);
+    u16countReceivedBit = 0;
+    Com_StateMachine = ComSM_ReceiveGreen;
+  }
+}
+
+//The expected bit pattern for green is 111010
+static void ComSM_ReceiveGreen(void)
+{
+
+  if(u16countReceivedBit == 0)
+  {
+    receivingHighBit();
+  }
+  else if(u16countReceivedBit == 1)
+  {
+    receivingHighBit();
+  }
+  else if (u16countReceivedBit == 2)
+  {
+    receivingHighBit();
+  }
+  else if (u16countReceivedBit == 3)
+  {
+    receivingLowBit();
+  }
+  else if(u16countReceivedBit == 4)
+  {
+    receivingHighBit();
+  }
+  else if(u16countReceivedBit == 5)
+  {
+    receivingLowBit();
+  }
+  else if(u16countReceivedBit == 6)
+  {
+    LedOn(GREEN);
+    u16countReceivedBit = 0;
+    Com_StateMachine = ComSM_ReceiveYellow;
+  }
+}
+
+//The expected bit pattern for yellow is 110010
+static void ComSM_ReceiveYellow(void)
+{
+  if(u16countReceivedBit == 0)
+  {
+    receivingHighBit();
+  }
+  else if(u16countReceivedBit == 1)
+  {
+    receivingHighBit();
+  }
+  else if (u16countReceivedBit == 2)
+  {
+    receivingLowBit();
+  }
+  else if (u16countReceivedBit == 3)
+  {
+    receivingLowBit();
+  }
+  else if(u16countReceivedBit == 4)
+  {
+    receivingHighBit();
+  }
+  else if(u16countReceivedBit == 5)
+  {
+    receivingLowBit();
+  }
+  else if(u16countReceivedBit == 6)
+  {
+    LedOn(YELLOW);
+    u16countReceivedBit = 0;
+    Com_StateMachine = ComSM_ReceiveOrange;
+  }
+}
+
+//The expected bit pattern for orange is 101000
+static void ComSM_ReceiveOrange(void)
+{
+
+  if(u16countReceivedBit == 0)
+  {
+    receivingHighBit();
+  }
+  else if(u16countReceivedBit == 1)
+  {
+    receivingLowBit();
+  }
+  else if (u16countReceivedBit == 2)
+  {
+    receivingHighBit();
+  }
+  else if (u16countReceivedBit == 3)
+  {
+    receivingLowBit();
+  }
+  else if(u16countReceivedBit == 4)
+  {
+    receivingLowBit();
+  }
+  else if(u16countReceivedBit == 5)
+  {
+    receivingLowBit();
+  }
+  else if(u16countReceivedBit == 6)
+  {
+    LedOn(ORANGE);
+    u16countReceivedBit = 0;
+    Com_StateMachine = ComSM_ReceiveRed;
+  }
+}
+
+//The expected bit pattern for red is 111100
+static void ComSM_ReceiveRed(void)
+{
+
+  if(u16countReceivedBit == 0)
+  {
+    receivingHighBit();
+  }
+  else if(u16countReceivedBit == 1)
+  {
+    receivingHighBit();
+  }
+  else if (u16countReceivedBit == 2)
+  {
+    receivingHighBit();
+  }
+  else if (u16countReceivedBit == 3)
+  {
+    receivingHighBit();
+  }
+  else if(u16countReceivedBit == 4)
+  {
+    receivingLowBit();
+  }
+  else if(u16countReceivedBit == 5)
+  {
+    receivingLowBit();
+  }
+  else if(u16countReceivedBit == 6)
+  {
+    LedOn(RED);
     u16countReceivedBit = 0;
   }
 }
@@ -498,6 +697,34 @@ static void ComSM_TransmitPurple(void)
      ButtonAcknowledge(BUTTON2);
     Com_StateMachine = ComSM_TransmitBlue;
   }
+  if(IsButtonPressed(BUTTON0))
+  {
+    //bit pattern transmitted is 110110
+    if(u16countSentBit == 0)
+    {  
+      OnBit();
+    }
+     if(u16countSentBit == 1)
+    {  
+      OnBit();
+    }
+      if(u16countSentBit == 2)
+    {  
+      OffBit();
+    }
+    if(u16countSentBit == 3)
+    {  
+      OnBit();
+    }
+    if(u16countSentBit == 4)
+    {  
+      OnBit();
+    }
+    if(u16countSentBit == 5)
+    {  
+      OffBit();
+    }
+  }
 }
 
 static void ComSM_TransmitBlue(void)
@@ -514,6 +741,34 @@ static void ComSM_TransmitBlue(void)
   {
      ButtonAcknowledge(BUTTON2);
     Com_StateMachine = ComSM_TransmitCyan;
+  }
+  if(IsButtonPressed(BUTTON0))
+  {
+    //bit pattern transmitted is 110000
+    if(u16countSentBit == 0)
+    {  
+      OnBit();
+    }
+     if(u16countSentBit == 1)
+    {  
+      OnBit();
+    }
+      if(u16countSentBit == 2)
+    {  
+      OffBit();
+    }
+    if(u16countSentBit == 3)
+    {  
+      OffBit();
+    }
+    if(u16countSentBit == 4)
+    {  
+      OffBit();
+    }
+    if(u16countSentBit == 5)
+    {  
+      OffBit();
+    }
   }
 }
 
@@ -532,6 +787,34 @@ static void ComSM_TransmitCyan(void)
     ButtonAcknowledge(BUTTON2);
     Com_StateMachine = ComSM_TransmitGreen;
   }
+  if(IsButtonPressed(BUTTON0))
+  {
+    //bit pattern transmitted is 111110
+    if(u16countSentBit == 0)
+    {  
+      OnBit();
+    }
+     if(u16countSentBit == 1)
+    {  
+      OnBit();
+    }
+      if(u16countSentBit == 2)
+    {  
+      OnBit();
+    }
+    if(u16countSentBit == 3)
+    {  
+      OnBit();
+    }
+    if(u16countSentBit == 4)
+    {  
+      OnBit();
+    }
+    if(u16countSentBit == 5)
+    {  
+      OffBit();
+    }
+  }
 }
 
 static void ComSM_TransmitGreen(void)
@@ -548,6 +831,34 @@ static void ComSM_TransmitGreen(void)
   {
     ButtonAcknowledge(BUTTON2);
     Com_StateMachine = ComSM_TransmitYellow;
+  }
+  if(IsButtonPressed(BUTTON0))
+  {
+    //bit pattern transmitted is 111010
+    if(u16countSentBit == 0)
+    {  
+      OnBit();
+    }
+     if(u16countSentBit == 1)
+    {  
+      OnBit();
+    }
+      if(u16countSentBit == 2)
+    {  
+      OnBit();
+    }
+    if(u16countSentBit == 3)
+    {  
+      OffBit();
+    }
+    if(u16countSentBit == 4)
+    {  
+      OnBit();
+    }
+    if(u16countSentBit == 5)
+    {  
+      OffBit();
+    }
   }
 }
 
@@ -566,6 +877,34 @@ static void ComSM_TransmitYellow(void)
     ButtonAcknowledge(BUTTON2);
     Com_StateMachine = ComSM_TransmitOrange;
   }
+  if(IsButtonPressed(BUTTON0))
+  {
+    //bit pattern transmitted is 110010
+    if(u16countSentBit == 0)
+    {  
+      OnBit();
+    }
+     if(u16countSentBit == 1)
+    {  
+      OnBit();
+    }
+      if(u16countSentBit == 2)
+    {  
+      OffBit();
+    }
+    if(u16countSentBit == 3)
+    {  
+      OffBit();
+    }
+    if(u16countSentBit == 4)
+    {  
+      OnBit();
+    }
+    if(u16countSentBit == 5)
+    {  
+      OffBit();
+    }
+  }
 }
 
 static void ComSM_TransmitOrange(void)
@@ -583,6 +922,34 @@ static void ComSM_TransmitOrange(void)
     ButtonAcknowledge(BUTTON2);
     Com_StateMachine = ComSM_TransmitRed;
   }
+  if(IsButtonPressed(BUTTON0))
+  {
+    //bit pattern transmitted is 101000
+    if(u16countSentBit == 0)
+    {  
+      OnBit();
+    }
+     if(u16countSentBit == 1)
+    {  
+      OffBit();
+    }
+      if(u16countSentBit == 2)
+    {  
+      OnBit();
+    }
+    if(u16countSentBit == 3)
+    {  
+      OffBit();
+    }
+    if(u16countSentBit == 4)
+    {  
+      OffBit();
+    }
+    if(u16countSentBit == 5)
+    {  
+      OffBit();
+    }
+  }
 }
 
 static void ComSM_TransmitRed(void)
@@ -599,6 +966,34 @@ static void ComSM_TransmitRed(void)
   {
     ButtonAcknowledge(BUTTON2);
     Com_StateMachine = ComSM_TransmitWhite;
+  }
+  if(IsButtonPressed(BUTTON0))
+  {
+    //bit pattern transmitted is 111100
+    if(u16countSentBit == 0)
+    {  
+      OnBit();
+    }
+     if(u16countSentBit == 1)
+    {  
+      OnBit();
+    }
+      if(u16countSentBit == 2)
+    {  
+      OnBit();
+    }
+    if(u16countSentBit == 3)
+    {  
+      OnBit();
+    }
+    if(u16countSentBit == 4)
+    {  
+      OffBit();
+    }
+    if(u16countSentBit == 5)
+    {  
+      OffBit();
+    }
   }
 }
 
