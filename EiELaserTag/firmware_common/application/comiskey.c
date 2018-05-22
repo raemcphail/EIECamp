@@ -208,7 +208,8 @@ Promises:
 
 */
 void OnBit(void)
-{   
+{  
+  TimerStart(TIMER_CHANNEL1);
   if(u16Count5ms >= 5)
   {
     u16Count5ms = 0;
@@ -232,8 +233,8 @@ Promises:
 */
 void OffBit(void)
 {
-  //TimerStop(TIMER_CHANNEL1);
-  //Com_ModulateSwitch = FALSE;
+  TimerStop(TIMER_CHANNEL1);
+  Com_ModulateSwitch = FALSE;
   if(u16Count5ms >= 5)
   {
     u16Count5ms = 0;
@@ -359,6 +360,7 @@ static void ComSM_ReceiverMode(void)
 //The following receive states wait for a spefic bit pattern, before expecting the next. When the correct bit pattern 
 //is received then a corresponding Led will turn on and the state will change to expect the next bit pattern
 
+//The expected bit pattern for white is 101010
 static void ComSM_ReceiveWhite(void)
 {
   if(u16countReceivedBit == 0)
@@ -367,39 +369,67 @@ static void ComSM_ReceiveWhite(void)
   }
   else if(u16countReceivedBit == 1)
   {
-    LedOn(YELLOW);
     receivingLowBit();
   }
   else if (u16countReceivedBit == 2)
   {
-    LedOn(GREEN);
     receivingHighBit();
   }
   else if (u16countReceivedBit == 3)
   {
-    LedOn(CYAN);
     receivingLowBit();
   }
   else if(u16countReceivedBit == 4)
   {
-    LedOn(BLUE);
     receivingHighBit();
   }
   else if(u16countReceivedBit == 5)
   {
-    LedOn(PURPLE);
     receivingLowBit();
   }
   else if(u16countReceivedBit == 6)
   {
-    LedOn(WHITE);
+    u16countReceivedBit = 0;
+    Com_StateMachine = ComSM_ReceivePurple;
+  }
+}
+
+//The expected bit pattern for white is 101010
+static void ComSM_ReceivePurple(void)
+{
+  LedOn(WHITE);
+  if(u16countReceivedBit == 0)
+  {
+    receivingHighBit();
+  }
+  else if(u16countReceivedBit == 1)
+  {
+    receivingHighBit();
+  }
+  else if (u16countReceivedBit == 2)
+  {
+    receivingLowBit();
+  }
+  else if (u16countReceivedBit == 3)
+  {
+    receivingHighBit();
+  }
+  else if(u16countReceivedBit == 4)
+  {
+    receivingHighBit();
+  }
+  else if(u16countReceivedBit == 5)
+  {
+    receivingLowBit();
+  }
+  else if(u16countReceivedBit == 6)
+  {
     u16countReceivedBit = 0;
   }
-  
- 
 }
 
 //The following transmit states let the user scroll through each different colour to select one to transmit
+
 static void ComSM_TransmitWhite(void)
 {
   LedOn(WHITE);
@@ -424,42 +454,29 @@ static void ComSM_TransmitWhite(void)
   
   if(IsButtonPressed(BUTTON0))
   {
+    //bit pattern transmitted is 101010
     if(u16countSentBit == 0)
     {  
-      TimerStart(TIMER_CHANNEL1);
       OnBit();
     }
      if(u16countSentBit == 1)
     {  
-      LedOn(YELLOW);
-      TimerStop(TIMER_CHANNEL1);
-      Com_ModulateSwitch = FALSE;
       OffBit();
     }
       if(u16countSentBit == 2)
     {  
-      TimerStart(TIMER_CHANNEL1);
-      LedOn(GREEN);
       OnBit();
     }
     if(u16countSentBit == 3)
     {  
-      LedOn(CYAN);
-      TimerStop(TIMER_CHANNEL1);
-      Com_ModulateSwitch = FALSE;
       OffBit();
     }
     if(u16countSentBit == 4)
     {  
-      TimerStart(TIMER_CHANNEL1);
-      LedOn(PURPLE);
       OnBit();
     }
     if(u16countSentBit == 5)
     {  
-      LedOn(RED);
-      TimerStop(TIMER_CHANNEL1);
-      Com_ModulateSwitch = FALSE;
       OffBit();
     }
   }
