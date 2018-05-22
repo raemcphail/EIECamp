@@ -73,6 +73,7 @@ the 1ms period.
 
   LaserTagInitialize();
   ComInitialize();
+  ComSVInitialize();
   UserApp2Initialize();
   UserApp3Initialize();
 
@@ -104,6 +105,7 @@ the 1ms period.
     /* Applications */
     //LaserTagRunActiveState();
     ComRunActiveState();
+    //ComSVRunActiveState();
     UserApp2RunActiveState();
     UserApp3RunActiveState();
     

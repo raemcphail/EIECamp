@@ -30,7 +30,7 @@ All Global variable names shall start with "G_LaserTag"
 ***********************************************************************************************************************/
 /* New variables */
 //volatile u32 G_u32LaserTagFlags;                       /* Global state flags */
-volatile u32 G_u32ComFlags;
+volatile u32 G_u32ComSVFlags;
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Existing variables (defined in other files -- should all contain the "extern" keyword) */
@@ -60,7 +60,7 @@ static u16 delimiter = 600;
 static u16 u16countReceivedBit;//keeps track of which bit in the pattern we expecting next
 static u16 u16countSentBit;//keeps track of which bit in the pattern is currently being sent
 static u16 u16nextBit;//keeps track of what the next bit in the bit pattern is
-static fnCode_type Com_StateMachine;
+static fnCode_type ComSV_StateMachine;
 static bool Com_ModulateSwitch;
 
 /**********************************************************************************************************************
@@ -79,7 +79,7 @@ is called. This boolean is used to determine if tranmitter should be ON or OFF.
 This function gets called every 5 ticks so that the signal tranmitted can be about 38kHz
 and the reciever can detect the signal.
 */
-void Com_38Modulate(void)
+/*void Com_38Modulate(void)
 {
   u32 *pu32ToggleGPIO;
   if(Com_ModulateSwitch)
@@ -93,7 +93,7 @@ void Com_38Modulate(void)
     Com_ModulateSwitch = TRUE;
   }
   *pu32ToggleGPIO = PA_10_I2C_SCL;
-}
+}*/
 /* end of Com_38Modulate*/
 
 
@@ -109,7 +109,7 @@ Promises:
 Increases u16countBit if there is a High bit (receiver detected signal for 5ms). 
 Sets u16countBit to 0 if the receiver isn't detecting a signal at any point during the 5ms.
 */
-void receivingHighBit(void)
+/*void receivingHighBit(void)
 {
     u32 *pu32Address;
     pu32Address = (u32*)(&(AT91C_BASE_PIOA->PIO_PDSR));
@@ -140,7 +140,7 @@ void receivingHighBit(void)
       u16countHigh = 0;
     }
     
-}
+}*/
 /*------------------------------------------------------------
 Function: receivingLowBit
 Description:
@@ -153,7 +153,7 @@ Promises:
 Increases u16countBit if there is a Low bit (receiver doesn't detected signal for 5ms). 
 Sets u16countBit to 0 if the receiver detects a signal during the 5ms.
 */
-void receivingLowBit(void)
+/*void receivingLowBit(void)
 {
     u32 *pu32Address;
     pu32Address = (u32*)(&(AT91C_BASE_PIOA->PIO_PDSR));
@@ -181,7 +181,7 @@ void receivingLowBit(void)
       u16countLow = 0;
     }
     
-}
+}*/
 /*--------------------------------------------------------------------------------------------------------------------*/
 /*Function: OnBit
 Description:
@@ -191,7 +191,7 @@ Requires:
 Promises:
 
 */
-void OnBit(void)
+/*void OnBit(void)
 {  
   TimerStart(TIMER_CHANNEL1);
   if(u16Count5ms >= 5)
@@ -204,7 +204,7 @@ void OnBit(void)
   {
     u16Count5ms++;
   }
-}
+}*/
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /*Function: OffBit
@@ -215,7 +215,7 @@ Requires:
 Promises:
 
 */
-void OffBit(void)
+/*void OffBit(void)
 {
   TimerStop(TIMER_CHANNEL1);
   Com_ModulateSwitch = FALSE;
@@ -231,7 +231,7 @@ void OffBit(void)
    // TimerStop(TIMER_CHANNEL1);
    // Com_ModulateSwitch = FALSE;
   }
-}
+}*/
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Protected functions                                                                                                */
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -248,7 +248,7 @@ Requires:
 Promises:
   -
 */
-void ComInitialize(void)
+void ComSVInitialize(void)
 {
   /* Enable the Interrupt Reg's for MOSI */
   
@@ -274,12 +274,12 @@ void ComInitialize(void)
   TimerStart(TIMER_CHANNEL1);
   if( 1 )
   {
-    Com_StateMachine = ComSM_Idle;
+    ComSV_StateMachine = ComSVSM_Idle;
   }
   else
   {
     /* The task isn't properly initialized, so shut it down and don't run */
-    Com_StateMachine = ComSM_Error;
+    ComSV_StateMachine = ComSVSM_Error;
   }
 
 } /* end ComInitialize() */
@@ -299,9 +299,9 @@ Requires:
 Promises:
   - Calls the function to pointed by the state machine function pointer
 */
-void ComRunActiveState(void)
+void ComSVRunActiveState(void)
 {
-  Com_StateMachine();
+  ComSV_StateMachine();
 
 } /* end ComRunActiveState */
 
@@ -316,15 +316,15 @@ State Machine Function Definitions
 /*
 
 */
-static void ComSM_Idle(void)
+static void ComSVSM_Idle(void)
 {
     TimerStop(TIMER_CHANNEL1);
     Com_ModulateSwitch = FALSE;
-    Com_StateMachine = ComSM_TransmitWhite;
+    ComSV_StateMachine = ComSVSM_TransmitWhite;
     u16countSentBit = 0;
 } // end ComSM_Idle() 
 
-static void ComSM_ReceiverMode(void)
+static void ComSVSM_ReceiverMode(void)
 {
   LedOff(WHITE);
   LedOff(PURPLE);
@@ -337,7 +337,7 @@ static void ComSM_ReceiverMode(void)
   u16countReceivedBit = 0;
   u16countHigh = 0;
   u16countLow = 0;
-  Com_StateMachine = ComSM_ReceiveWhite;
+  ComSV_StateMachine = ComSVSM_ReceiveWhite;
   //receivingSignal();
 }
 
@@ -345,7 +345,7 @@ static void ComSM_ReceiverMode(void)
 //is received then a corresponding Led will turn on and the state will change to expect the next bit pattern
 
 //The expected bit pattern for white is 101010
-static void ComSM_ReceiveWhite(void)
+static void ComSVSM_ReceiveWhite(void)
 {
   if(u16countReceivedBit == 0)
   {
@@ -375,12 +375,12 @@ static void ComSM_ReceiveWhite(void)
   {
     LedOn(WHITE);
     u16countReceivedBit = 0;
-    Com_StateMachine = ComSM_ReceivePurple;
+    ComSV_StateMachine = ComSVSM_ReceivePurple;
   }
 }
 
 //The expected bit pattern for purple is 110110
-static void ComSM_ReceivePurple(void)
+static void ComSVSM_ReceivePurple(void)
 {
 
   if(u16countReceivedBit == 0)
@@ -411,12 +411,12 @@ static void ComSM_ReceivePurple(void)
   {
     LedOn(PURPLE);
     u16countReceivedBit = 0;
-    Com_StateMachine = ComSM_ReceiveBlue;
+    ComSV_StateMachine = ComSVSM_ReceiveBlue;
   }
 }
 
 //The expected bit pattern for blue is 110000
-static void ComSM_ReceiveBlue(void)
+static void ComSVSM_ReceiveBlue(void)
 {
   if(u16countReceivedBit == 0)
   {
@@ -446,12 +446,12 @@ static void ComSM_ReceiveBlue(void)
   {
     LedOn(BLUE);
     u16countReceivedBit = 0;
-    Com_StateMachine = ComSM_ReceiveCyan;
+    ComSV_StateMachine = ComSVSM_ReceiveCyan;
   }
 }
 
 //The expected bit pattern for cyan is 111110
-static void ComSM_ReceiveCyan(void)
+static void ComSVSM_ReceiveCyan(void)
 {
   if(u16countReceivedBit == 0)
   {
@@ -481,12 +481,12 @@ static void ComSM_ReceiveCyan(void)
   {
     LedOn(CYAN);
     u16countReceivedBit = 0;
-    Com_StateMachine = ComSM_ReceiveGreen;
+    ComSV_StateMachine = ComSVSM_ReceiveGreen;
   }
 }
 
 //The expected bit pattern for green is 111010
-static void ComSM_ReceiveGreen(void)
+static void ComSVSM_ReceiveGreen(void)
 {
 
   if(u16countReceivedBit == 0)
@@ -517,12 +517,12 @@ static void ComSM_ReceiveGreen(void)
   {
     LedOn(GREEN);
     u16countReceivedBit = 0;
-    Com_StateMachine = ComSM_ReceiveYellow;
+    ComSV_StateMachine = ComSVSM_ReceiveYellow;
   }
 }
 
 //The expected bit pattern for yellow is 110010
-static void ComSM_ReceiveYellow(void)
+static void ComSVSM_ReceiveYellow(void)
 {
   if(u16countReceivedBit == 0)
   {
@@ -552,12 +552,12 @@ static void ComSM_ReceiveYellow(void)
   {
     LedOn(YELLOW);
     u16countReceivedBit = 0;
-    Com_StateMachine = ComSM_ReceiveOrange;
+    ComSV_StateMachine = ComSVSM_ReceiveOrange;
   }
 }
 
 //The expected bit pattern for orange is 101000
-static void ComSM_ReceiveOrange(void)
+static void ComSVSM_ReceiveOrange(void)
 {
 
   if(u16countReceivedBit == 0)
@@ -588,12 +588,12 @@ static void ComSM_ReceiveOrange(void)
   {
     LedOn(ORANGE);
     u16countReceivedBit = 0;
-    Com_StateMachine = ComSM_ReceiveRed;
+    ComSV_StateMachine = ComSVSM_ReceiveRed;
   }
 }
 
 //The expected bit pattern for red is 111100
-static void ComSM_ReceiveRed(void)
+static void ComSVSM_ReceiveRed(void)
 {
 
   if(u16countReceivedBit == 0)
@@ -629,7 +629,7 @@ static void ComSM_ReceiveRed(void)
 
 //The following transmit states let the user scroll through each different colour to select one to transmit
 
-static void ComSM_TransmitWhite(void)
+static void ComSVSM_TransmitWhite(void)
 {
   LedOn(WHITE);
   LedOff(PURPLE);
@@ -637,18 +637,18 @@ static void ComSM_TransmitWhite(void)
   if(WasButtonPressed(BUTTON1))
   {
     ButtonAcknowledge(BUTTON1);
-    Com_StateMachine = ComSM_TransmitRed;
+    ComSV_StateMachine = ComSVSM_TransmitRed;
   }
   if(WasButtonPressed(BUTTON2))
   {
     ButtonAcknowledge(BUTTON2);
-    Com_StateMachine = ComSM_TransmitPurple;
+    ComSV_StateMachine = ComSVSM_TransmitPurple;
   }
  if(WasButtonPressed(BUTTON3))
  {
   LedOn(BLUE);
   ButtonAcknowledge(BUTTON3);
-  Com_StateMachine = ComSM_ReceiverMode;
+  ComSV_StateMachine = ComSVSM_ReceiverMode;
   }
   
   if(IsButtonPressed(BUTTON0))
@@ -682,7 +682,7 @@ static void ComSM_TransmitWhite(void)
 
 }
 
-static void ComSM_TransmitPurple(void)
+static void ComSVSM_TransmitPurple(void)
 {
   LedOn(PURPLE);
   LedOff(WHITE);
@@ -690,12 +690,12 @@ static void ComSM_TransmitPurple(void)
   if(WasButtonPressed(BUTTON1))
   {
     ButtonAcknowledge(BUTTON1);
-    Com_StateMachine = ComSM_TransmitWhite;
+    ComSV_StateMachine = ComSVSM_TransmitWhite;
   }
   if(WasButtonPressed(BUTTON2))
   {
-     ButtonAcknowledge(BUTTON2);
-    Com_StateMachine = ComSM_TransmitBlue;
+    ButtonAcknowledge(BUTTON2);
+    ComSV_StateMachine = ComSVSM_TransmitBlue;
   }
   if(IsButtonPressed(BUTTON0))
   {
@@ -727,7 +727,7 @@ static void ComSM_TransmitPurple(void)
   }
 }
 
-static void ComSM_TransmitBlue(void)
+static void ComSVSM_TransmitBlue(void)
 {
   LedOn(BLUE);
   LedOff(PURPLE);
@@ -735,12 +735,12 @@ static void ComSM_TransmitBlue(void)
   if(WasButtonPressed(BUTTON1))
   {
     ButtonAcknowledge(BUTTON1);
-    Com_StateMachine = ComSM_TransmitPurple;
+    ComSV_StateMachine = ComSVSM_TransmitPurple;
   }
   if(WasButtonPressed(BUTTON2))
   {
      ButtonAcknowledge(BUTTON2);
-     Com_StateMachine = ComSM_TransmitCyan;
+    ComSV_StateMachine = ComSVSM_TransmitCyan;
   }
   if(IsButtonPressed(BUTTON0))
   {
@@ -772,7 +772,7 @@ static void ComSM_TransmitBlue(void)
   }
 }
 
-static void ComSM_TransmitCyan(void)
+static void ComSVSM_TransmitCyan(void)
 {
   LedOn(CYAN);
   LedOff(BLUE);
@@ -780,12 +780,12 @@ static void ComSM_TransmitCyan(void)
   if(WasButtonPressed(BUTTON1))
   {
     ButtonAcknowledge(BUTTON1);
-    Com_StateMachine = ComSM_TransmitBlue;
+    ComSV_StateMachine = ComSVSM_TransmitBlue;
   }
   if(WasButtonPressed(BUTTON2))
   {
     ButtonAcknowledge(BUTTON2);
-    Com_StateMachine = ComSM_TransmitGreen;
+    ComSV_StateMachine = ComSVSM_TransmitGreen;
   }
   if(IsButtonPressed(BUTTON0))
   {
@@ -817,7 +817,7 @@ static void ComSM_TransmitCyan(void)
   }
 }
 
-static void ComSM_TransmitGreen(void)
+static void ComSVSM_TransmitGreen(void)
 {
   LedOn(GREEN);
   LedOff(CYAN);
@@ -825,12 +825,12 @@ static void ComSM_TransmitGreen(void)
   if(WasButtonPressed(BUTTON1))
   {
     ButtonAcknowledge(BUTTON1);
-    Com_StateMachine = ComSM_TransmitCyan;
+    ComSV_StateMachine = ComSVSM_TransmitCyan;
   }
   if(WasButtonPressed(BUTTON2))
   {
     ButtonAcknowledge(BUTTON2);
-    Com_StateMachine = ComSM_TransmitYellow;
+    ComSV_StateMachine = ComSVSM_TransmitYellow;
   }
   if(IsButtonPressed(BUTTON0))
   {
@@ -862,7 +862,7 @@ static void ComSM_TransmitGreen(void)
   }
 }
 
-static void ComSM_TransmitYellow(void)
+static void ComSVSM_TransmitYellow(void)
 {
   LedOn(YELLOW);
   LedOff(GREEN);
@@ -870,12 +870,12 @@ static void ComSM_TransmitYellow(void)
   if(WasButtonPressed(BUTTON1))
   {
     ButtonAcknowledge(BUTTON1);
-    Com_StateMachine = ComSM_TransmitGreen;
+    ComSV_StateMachine = ComSVSM_TransmitGreen;
   }
   if(WasButtonPressed(BUTTON2))
   {
     ButtonAcknowledge(BUTTON2);
-    Com_StateMachine = ComSM_TransmitOrange;
+    ComSV_StateMachine = ComSVSM_TransmitOrange;
   }
   if(IsButtonPressed(BUTTON0))
   {
@@ -907,7 +907,7 @@ static void ComSM_TransmitYellow(void)
   }
 }
 
-static void ComSM_TransmitOrange(void)
+static void ComSVSM_TransmitOrange(void)
 {
   LedOn(ORANGE);
   LedOff(YELLOW);
@@ -915,12 +915,12 @@ static void ComSM_TransmitOrange(void)
   if(WasButtonPressed(BUTTON1))
   {
     ButtonAcknowledge(BUTTON1);
-    Com_StateMachine = ComSM_TransmitYellow;
+    ComSV_StateMachine = ComSVSM_TransmitYellow;
   }
   if(WasButtonPressed(BUTTON2))
   {
     ButtonAcknowledge(BUTTON2);
-    Com_StateMachine = ComSM_TransmitRed;
+    ComSV_StateMachine = ComSVSM_TransmitRed;
   }
   if(IsButtonPressed(BUTTON0))
   {
@@ -952,7 +952,7 @@ static void ComSM_TransmitOrange(void)
   }
 }
 
-static void ComSM_TransmitRed(void)
+static void ComSVSM_TransmitRed(void)
 {
   LedOn(RED);
   LedOff(ORANGE);
@@ -960,12 +960,12 @@ static void ComSM_TransmitRed(void)
   if(WasButtonPressed(BUTTON1))
   {
     ButtonAcknowledge(BUTTON1);
-    Com_StateMachine = ComSM_TransmitOrange;
+    ComSV_StateMachine = ComSVSM_TransmitOrange;
   }
   if(WasButtonPressed(BUTTON2))
   {
     ButtonAcknowledge(BUTTON2);
-    Com_StateMachine = ComSM_TransmitWhite;
+    ComSV_StateMachine = ComSVSM_TransmitWhite;
   }
   if(IsButtonPressed(BUTTON0))
   {
@@ -1007,7 +1007,7 @@ static void ComSM_ModulateOn(void)
   {
     u16Count5ms = 0;
     u16countSentBit++;  
-    Com_StateMachine = ComSM_TransmitWhite;
+    ComSV_StateMachine = ComSVSM_TransmitWhite;
   }
   else
   {
@@ -1019,7 +1019,7 @@ static void ComSM_ModulateOn(void)
 
 /*-------------------------------------------------------------------------------------------------------------------*/
 /* Handle an error */
-static void ComSM_Error(void)          
+static void ComSVSM_Error(void)          
 {
   
 } /* end ComSM_Error() */
