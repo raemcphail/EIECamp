@@ -73,7 +73,6 @@ the 1ms period.
 
   LaserTagInitialize();
   ComInitialize();
-  ComSVInitialize();
   UserApp2Initialize();
   UserApp3Initialize();
 
