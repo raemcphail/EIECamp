@@ -57,6 +57,7 @@ Function Declarations
 /*--------------------------------------------------------------------------------------------------------------------*/
 void ComSVInitialize(void);
 void ComSVRunActiveState(void);
+void ComSVIdle(void);
 void EnableInterruptReg(void);
 void reset(void);
 

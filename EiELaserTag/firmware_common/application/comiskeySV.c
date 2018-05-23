@@ -28,7 +28,7 @@ All Global variable names shall start with "G_UserApp1"
 ***********************************************************************************************************************/
 /* New variables */
 volatile u32 G_u32ComSVFlags;                       /* Global state flags */
-
+static u16 u16countSentBit;
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Existing variables (defined in other files -- should all contain the "extern" keyword) */
@@ -74,6 +74,8 @@ Promises:
 void ComSVInitialize(void)
 {
  
+  /*Set counter to 0 initially*/
+  u16countSentBit = 0;
   /* If good initialization, set state to Idle */
   if( 1 )
   {
@@ -104,7 +106,6 @@ Promises:
 */
 void ComSVRunActiveState(void)
 {
-  LedOn(CYAN);
   ComSV_StateMachine();
 
 } /* end UserApp1RunActiveState */
@@ -123,7 +124,7 @@ State Machine Function Definitions
 /* Wait for ??? */
 static void ComSVSM_Idle(void)
 {
-
+  
 } /* end UserApp1SM_Idle() */
     
 
@@ -139,8 +140,179 @@ static void ComSVSM_Error(void)
 static void ComSVSM_TransmitWhite(void)          
 {
   LedOn(WHITE);
+  LedOff(PURPLE);
+  LedOff(RED);
+  if(WasButtonPressed(BUTTON1))
+  {
+    ButtonAcknowledge(BUTTON1);
+    ComSV_StateMachine = ComSVSM_TransmitRed;
+  }
+  if(WasButtonPressed(BUTTON2))
+  {
+    ButtonAcknowledge(BUTTON2);
+    ComSV_StateMachine = ComSVSM_TransmitPurple;
+  }
+  
+  if(IsButtonPressed(BUTTON0))
+  {
+    //bit pattern transmitted is 101010
+    if(u16countSentBit == 0)
+    {  
+      OnBit();
+    }
+     if(u16countSentBit == 1)
+    {  
+      OffBit();
+    }
+      if(u16countSentBit == 2)
+    {  
+      OnBit();
+    }
+    if(u16countSentBit == 3)
+    {  
+      OffBit();
+    }
+    if(u16countSentBit == 4)
+    {  
+      OnBit();
+    }
+    if(u16countSentBit == 5)
+    {  
+      OffBit();
+    }
+  }
+
 } /* end ComVSM_TransmitWhite() */
 
+/*-------------------------------------------------------------------------------------------------------------------*/
+/* Transmit purple bit pattern */
+static void ComSVSM_TransmitPurple(void)          
+{
+  LedOn(PURPLE);
+  LedOff(WHITE);
+  LedOff(BLUE);
+  if(WasButtonPressed(BUTTON1))
+  {
+    ButtonAcknowledge(BUTTON1);
+    ComSV_StateMachine = ComSVSM_TransmitWhite;
+  }
+  if(WasButtonPressed(BUTTON2))
+  {
+    ButtonAcknowledge(BUTTON2);
+    ComSV_StateMachine = ComSVSM_TransmitBlue;
+  }
+} /* end ComVSM_TransmitPurple() */
+
+/*-------------------------------------------------------------------------------------------------------------------*/
+/* Transmit blue bit pattern */
+static void ComSVSM_TransmitBlue(void)          
+{  
+  LedOn(BLUE);
+  LedOff(PURPLE);
+  LedOff(CYAN);
+  if(WasButtonPressed(BUTTON1))
+  {
+    ButtonAcknowledge(BUTTON1);
+    ComSV_StateMachine = ComSVSM_TransmitPurple;
+  }
+  if(WasButtonPressed(BUTTON2))
+  {
+    ButtonAcknowledge(BUTTON2);
+    ComSV_StateMachine = ComSVSM_TransmitCyan;
+  }
+  
+} /* end ComVSM_TransmitBlue() */
+/*-------------------------------------------------------------------------------------------------------------------*/
+/* Transmit cyan bit pattern */
+static void ComSVSM_TransmitCyan(void)          
+{
+  LedOn(CYAN);
+  LedOff(BLUE);
+  LedOff(GREEN);
+  if(WasButtonPressed(BUTTON1))
+  {
+    ButtonAcknowledge(BUTTON1);
+    ComSV_StateMachine = ComSVSM_TransmitBlue;
+  }
+  if(WasButtonPressed(BUTTON2))
+  {
+    ButtonAcknowledge(BUTTON2);
+    ComSV_StateMachine = ComSVSM_TransmitGreen;
+  }
+} /* end ComVSM_TransmitCyan() */
+/*-------------------------------------------------------------------------------------------------------------------*/
+/* Transmit green bit pattern */
+static void ComSVSM_TransmitGreen(void)          
+{
+  LedOn(GREEN);
+  LedOff(CYAN);
+  LedOff(YELLOW);
+  if(WasButtonPressed(BUTTON1))
+  {
+    ButtonAcknowledge(BUTTON1);
+    ComSV_StateMachine = ComSVSM_TransmitCyan;
+  }
+  if(WasButtonPressed(BUTTON2))
+  {
+    ButtonAcknowledge(BUTTON2);
+    ComSV_StateMachine = ComSVSM_TransmitYellow;
+  }
+} /* end ComVSM_TransmitGreen() */
+/*-------------------------------------------------------------------------------------------------------------------*/
+/* Transmit yellow bit pattern */
+static void ComSVSM_TransmitYellow(void)          
+{
+  LedOn(YELLOW);
+  LedOff(GREEN);
+  LedOff(ORANGE);
+  if(WasButtonPressed(BUTTON1))
+  {
+    ButtonAcknowledge(BUTTON1);
+    ComSV_StateMachine = ComSVSM_TransmitGreen;
+  }
+  if(WasButtonPressed(BUTTON2))
+  {
+    ButtonAcknowledge(BUTTON2);
+    ComSV_StateMachine = ComSVSM_TransmitOrange;
+  }
+} /* end ComVSM_TransmitYellow() */
+/*-------------------------------------------------------------------------------------------------------------------*/
+/* Transmit orange bit pattern */
+static void ComSVSM_TransmitOrange(void)          
+{
+  LedOn(ORANGE);
+  LedOff(YELLOW);
+  LedOff(RED);
+  if(WasButtonPressed(BUTTON1))
+  {
+    ButtonAcknowledge(BUTTON1);
+    ComSV_StateMachine = ComSVSM_TransmitYellow;
+  }
+  if(WasButtonPressed(BUTTON2))
+  {
+    ButtonAcknowledge(BUTTON2);
+    ComSV_StateMachine = ComSVSM_TransmitRed;
+  }
+} /* end ComVSM_TransmitOrange() */
+
+/*-------------------------------------------------------------------------------------------------------------------*/
+/* Transmit red bit pattern */
+static void ComSVSM_TransmitRed(void)          
+{
+  LedOn(RED);
+  LedOff(ORANGE);
+  LedOff(WHITE);
+  if(WasButtonPressed(BUTTON1))
+  {
+    ButtonAcknowledge(BUTTON1);
+    ComSV_StateMachine = ComSVSM_TransmitOrange;
+  }
+  if(WasButtonPressed(BUTTON2))
+  {
+    ButtonAcknowledge(BUTTON2);
+    ComSV_StateMachine = ComSVSM_TransmitWhite;
+  }
+} /* end ComVSM_TransmitRed() */
 
 
 /*--------------------------------------------------------------------------------------------------------------------*/
