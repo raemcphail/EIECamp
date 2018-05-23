@@ -28,7 +28,7 @@ All Global variable names shall start with "G_UserApp1"
 ***********************************************************************************************************************/
 /* New variables */
 volatile u32 G_u32ComSVFlags;                       /* Global state flags */
-static u16 u16countSentBit;
+
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Existing variables (defined in other files -- should all contain the "extern" keyword) */
@@ -38,12 +38,14 @@ extern volatile u32 G_u32ApplicationFlags;             /* From main.c */
 extern volatile u32 G_u32SystemTime1ms;                /* From board-specific source file */
 extern volatile u32 G_u32SystemTime1s;                 /* From board-specific source file */
 
+extern volatile u16 G_u16countSentBit;                 /* From comiskey.c */
 
 /***********************************************************************************************************************
 Global variable definitions with scope limited to this local application.
 Variable names shall start with "UserApp1_" and be declared as static.
 ***********************************************************************************************************************/
 static fnCode_type ComSV_StateMachine;            /* The state machine function pointer */
+static u16 u16SVcountSentBit;
 //static u32 UserApp1_u32Timeout;                      /* Timeout counter used across states */
 
 
@@ -75,7 +77,7 @@ void ComSVInitialize(void)
 {
  
   /*Set counter to 0 initially*/
-  u16countSentBit = 0;
+  u16SVcountSentBit = 0;
   /* If good initialization, set state to Idle */
   if( 1 )
   {
@@ -156,27 +158,28 @@ static void ComSVSM_TransmitWhite(void)
   if(IsButtonPressed(BUTTON0))
   {
     //bit pattern transmitted is 101010
-    if(u16countSentBit == 0)
+    if(G_u16countSentBit == 0)
     {  
       OnBit();
     }
-     if(u16countSentBit == 1)
+     if(G_u16countSentBit == 1)
+    {  
+      LedOn(CYAN);
+      OffBit();
+    }
+     if(G_u16countSentBit  == 2)
+    {  
+      OnBit();
+    }
+    if(G_u16countSentBit  == 3)
     {  
       OffBit();
     }
-      if(u16countSentBit == 2)
+    if(G_u16countSentBit  == 4)
     {  
       OnBit();
     }
-    if(u16countSentBit == 3)
-    {  
-      OffBit();
-    }
-    if(u16countSentBit == 4)
-    {  
-      OnBit();
-    }
-    if(u16countSentBit == 5)
+    if(G_u16countSentBit == 5)
     {  
       OffBit();
     }

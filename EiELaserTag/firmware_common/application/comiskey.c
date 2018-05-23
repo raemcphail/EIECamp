@@ -31,7 +31,7 @@ All Global variable names shall start with "G_LaserTag"
 /* New variables */
 //volatile u32 G_u32LaserTagFlags;                       /* Global state flags */
 volatile u32 G_u32ComFlags;
-
+volatile u16 G_u16countSentBit;
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Existing variables (defined in other files -- should all contain the "extern" keyword) */
 extern u32 G_u32AntApiCurrentMessageTimeStamp;
@@ -199,6 +199,8 @@ void OnBit(void)
     u16Count5ms = 0;
     u16countSentBit++;  
     u16countSentBit%=6;
+    G_u16countSentBit++;  
+    G_u16countSentBit%=6;
   }
   else
   {
@@ -224,12 +226,12 @@ void OffBit(void)
     u16Count5ms = 0;
     u16countSentBit++;
     u16countSentBit%=6;
+    G_u16countSentBit++;  
+    G_u16countSentBit%=6;
   }
   else
   {
     u16Count5ms++;
-   // TimerStop(TIMER_CHANNEL1);
-   // Com_ModulateSwitch = FALSE;
   }
 }
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -256,6 +258,8 @@ void ComInitialize(void)
     u16nextBit = 1; 
    /* Set counter to 0 to start*/
     u16countSentBit = 0; 
+   /* Set counter to 0 to start*/
+    G_u16countSentBit = 0; 
   /* Set counter to 0 to start*/
     u16countReceivedBit = 0;
   /* Set counter to 0 to start*/
@@ -654,28 +658,28 @@ static void ComSM_TransmitWhite(void)
   if(IsButtonPressed(BUTTON0))
   {
     //bit pattern transmitted is 101010
-    if(u16countSentBit == 0)
+    if(G_u16countSentBit == 0)
     {  
       OnBit();
     }
-     if(u16countSentBit == 1)
+     if(G_u16countSentBit == 1)
     {  
       OffBit();
     }
-      if(u16countSentBit == 2)
+   if(G_u16countSentBit == 2)
     {  
       OnBit();
     }
-    if(u16countSentBit == 3)
+    if(G_u16countSentBit == 3)
     {  
-      OffBit();
+      OffBit();    
     }
-    if(u16countSentBit == 4)
+    if(G_u16countSentBit == 4)
     {  
-      OnBit();
+     OnBit();
     }
-    if(u16countSentBit == 5)
-    {  
+    if(G_u16countSentBit == 5)
+    { 
       OffBit();
     }
   }
@@ -922,7 +926,7 @@ static void ComSM_TransmitOrange(void)
     ButtonAcknowledge(BUTTON2);
     Com_StateMachine = ComSM_TransmitRed;
   }
-  if(IsButtonPressed(BUTTON0))
+ if(IsButtonPressed(BUTTON0))
   {
     //bit pattern transmitted is 101000
     if(u16countSentBit == 0)
