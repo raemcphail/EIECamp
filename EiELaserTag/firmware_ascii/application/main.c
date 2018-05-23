@@ -104,7 +104,6 @@ the 1ms period.
     /* Applications */
     //LaserTagRunActiveState();
     ComRunActiveState();
-    //ComSVRunActiveState();
     UserApp2RunActiveState();
     UserApp3RunActiveState();
     
