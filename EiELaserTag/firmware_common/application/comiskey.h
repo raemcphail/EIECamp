@@ -51,7 +51,6 @@ Function Declarations
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Public functions                                                                                                   */
 /*--------------------------------------------------------------------------------------------------------------------*/
-//void LaserTagToggler(void);
 void receivingSignal(void);
 void Com_38Modulate(void);
 void receivingHighBit(void);
@@ -62,12 +61,8 @@ void OffBit(void);
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Protected functions                                                                                                */
 /*--------------------------------------------------------------------------------------------------------------------*/
-//void LaserTagInitialize(void);
-//void LaserTagRunActiveState(void);
 void ComInitialize(void);
 void ComRunActiveState(void);
-void ComSVInitialize(void);
-void ComSVRunActiveState(void);
 void Com_38Modulate(void);
 void EnableInterruptReg(void);
 void reset(void);
