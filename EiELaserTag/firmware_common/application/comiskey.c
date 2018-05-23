@@ -197,8 +197,6 @@ void OnBit(void)
   if(u16Count5ms >= 5)
   {
     u16Count5ms = 0;
-    u16countSentBit++;  
-    u16countSentBit%=6;
     G_u16countSentBit++;  
     G_u16countSentBit%=6;
   }
@@ -224,8 +222,6 @@ void OffBit(void)
   if(u16Count5ms >= 5)
   {
     u16Count5ms = 0;
-    u16countSentBit++;
-    u16countSentBit%=6;
     G_u16countSentBit++;  
     G_u16countSentBit%=6;
   }
@@ -704,27 +700,27 @@ static void ComSM_TransmitPurple(void)
   if(IsButtonPressed(BUTTON0))
   {
     //bit pattern transmitted is 110110
-    if(u16countSentBit == 0)
+    if(G_u16countSentBit == 0)
     {  
       OnBit();
     }
-     if(u16countSentBit == 1)
+    if(G_u16countSentBit == 1)
     {  
       OnBit();
     }
-      if(u16countSentBit == 2)
+    if(G_u16countSentBit == 2)
     {  
       OffBit();
     }
-    if(u16countSentBit == 3)
+    if(G_u16countSentBit == 3)
     {  
       OnBit();
     }
-    if(u16countSentBit == 4)
+    if(G_u16countSentBit == 4)
     {  
       OnBit();
     }
-    if(u16countSentBit == 5)
+    if(G_u16countSentBit == 5)
     {  
       OffBit();
     }
@@ -749,27 +745,27 @@ static void ComSM_TransmitBlue(void)
   if(IsButtonPressed(BUTTON0))
   {
     //bit pattern transmitted is 110000
-    if(u16countSentBit == 0)
+    if(G_u16countSentBit == 0)
     {  
       OnBit();
     }
-     if(u16countSentBit == 1)
+     if(G_u16countSentBit == 1)
     {  
       OnBit();
     }
-      if(u16countSentBit == 2)
+      if(G_u16countSentBit == 2)
     {  
       OffBit();
     }
-    if(u16countSentBit == 3)
+    if(G_u16countSentBit == 3)
     {  
       OffBit();
     }
-    if(u16countSentBit == 4)
+    if(G_u16countSentBit == 4)
     {  
       OffBit();
     }
-    if(u16countSentBit == 5)
+    if(G_u16countSentBit == 5)
     {  
       OffBit();
     }
@@ -794,27 +790,27 @@ static void ComSM_TransmitCyan(void)
   if(IsButtonPressed(BUTTON0))
   {
     //bit pattern transmitted is 111110
-    if(u16countSentBit == 0)
+    if(G_u16countSentBit == 0)
     {  
       OnBit();
     }
-     if(u16countSentBit == 1)
+     if(G_u16countSentBit == 1)
     {  
       OnBit();
     }
-      if(u16countSentBit == 2)
+      if(G_u16countSentBit == 2)
     {  
       OnBit();
     }
-    if(u16countSentBit == 3)
+    if(G_u16countSentBit == 3)
     {  
       OnBit();
     }
-    if(u16countSentBit == 4)
+    if(G_u16countSentBit == 4)
     {  
       OnBit();
     }
-    if(u16countSentBit == 5)
+    if(G_u16countSentBit == 5)
     {  
       OffBit();
     }
@@ -839,27 +835,27 @@ static void ComSM_TransmitGreen(void)
   if(IsButtonPressed(BUTTON0))
   {
     //bit pattern transmitted is 111010
-    if(u16countSentBit == 0)
+    if(G_u16countSentBit == 0)
     {  
       OnBit();
     }
-     if(u16countSentBit == 1)
+     if(G_u16countSentBit == 1)
     {  
       OnBit();
     }
-      if(u16countSentBit == 2)
+      if(G_u16countSentBit == 2)
     {  
       OnBit();
     }
-    if(u16countSentBit == 3)
+    if(G_u16countSentBit == 3)
     {  
       OffBit();
     }
-    if(u16countSentBit == 4)
+    if(G_u16countSentBit == 4)
     {  
       OnBit();
     }
-    if(u16countSentBit == 5)
+    if(G_u16countSentBit == 5)
     {  
       OffBit();
     }
@@ -884,27 +880,27 @@ static void ComSM_TransmitYellow(void)
   if(IsButtonPressed(BUTTON0))
   {
     //bit pattern transmitted is 110010
-    if(u16countSentBit == 0)
+    if(G_u16countSentBit == 0)
     {  
       OnBit();
     }
-     if(u16countSentBit == 1)
+     if(G_u16countSentBit == 1)
     {  
       OnBit();
     }
-      if(u16countSentBit == 2)
+      if(G_u16countSentBit == 2)
     {  
       OffBit();
     }
-    if(u16countSentBit == 3)
+    if(G_u16countSentBit == 3)
     {  
       OffBit();
     }
-    if(u16countSentBit == 4)
+    if(G_u16countSentBit == 4)
     {  
       OnBit();
     }
-    if(u16countSentBit == 5)
+    if(G_u16countSentBit == 5)
     {  
       OffBit();
     }
@@ -929,27 +925,27 @@ static void ComSM_TransmitOrange(void)
  if(IsButtonPressed(BUTTON0))
   {
     //bit pattern transmitted is 101000
-    if(u16countSentBit == 0)
+    if(G_u16countSentBit == 0)
     {  
       OnBit();
     }
-     if(u16countSentBit == 1)
+    if(G_u16countSentBit == 1)
     {  
       OffBit();
     }
-      if(u16countSentBit == 2)
+    if(G_u16countSentBit == 2)
     {  
       OnBit();
     }
-    if(u16countSentBit == 3)
+    if(G_u16countSentBit == 3)
     {  
       OffBit();
     }
-    if(u16countSentBit == 4)
+    if(G_u16countSentBit == 4)
     {  
       OffBit();
     }
-    if(u16countSentBit == 5)
+    if(G_u16countSentBit == 5)
     {  
       OffBit();
     }
@@ -974,27 +970,27 @@ static void ComSM_TransmitRed(void)
   if(IsButtonPressed(BUTTON0))
   {
     //bit pattern transmitted is 111100
-    if(u16countSentBit == 0)
+    if(G_u16countSentBit == 0)
     {  
       OnBit();
     }
-     if(u16countSentBit == 1)
+    if(G_u16countSentBit == 1)
     {  
       OnBit();
     }
-      if(u16countSentBit == 2)
+    if(G_u16countSentBit == 2)
     {  
       OnBit();
     }
-    if(u16countSentBit == 3)
+    if(G_u16countSentBit == 3)
     {  
       OnBit();
     }
-    if(u16countSentBit == 4)
+    if(G_u16countSentBit == 4)
     {  
       OffBit();
     }
-    if(u16countSentBit == 5)
+    if(G_u16countSentBit == 5)
     {  
       OffBit();
     }
