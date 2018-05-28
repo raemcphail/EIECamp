@@ -99,6 +99,15 @@ static void ComSM_ReceiveYellow(void);
 static void ComSM_ReceiveOrange(void);
 static void ComSM_ReceiveRed(void);
 
+static void ComSM_ReceiveWhite2(void);
+static void ComSM_ReceivePurple2(void);
+static void ComSM_ReceiveBlue2(void);
+static void ComSM_ReceiveCyan2(void);
+static void ComSM_ReceiveGreen2(void);
+static void ComSM_ReceiveYellow2(void);
+static void ComSM_ReceiveOrange2(void);
+static void ComSM_ReceiveRed2(void);
+
 #endif /* __COMISKEY_H */
 
 

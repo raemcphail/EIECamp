@@ -629,13 +629,15 @@ static void ComSM_ReceiveRed(void)
     u16countReceivedBit = 0;
   }
 }
+
+
 /*-------------------------------------------------------------------------------------*/
 /* Receiver Mode 2 for final challenge in Communication is key. It works the same way as 
 before where each state expects a different colour then expects the next colour.
 The only difference is the order of the colors is different, even the bit patterns are the same*/
 
 //The expected bit pattern for green is 111010
-static void ComSM_ReceiveGreen(void)
+static void ComSM_ReceiveGreen2(void)
 {
 
   if(u16countReceivedBit == 0)
@@ -666,9 +668,261 @@ static void ComSM_ReceiveGreen(void)
   {
     LedOn(GREEN);
     u16countReceivedBit = 0;
-    Com_StateMachine = ComSM_ReceiveYellow;
+    Com_StateMachine = ComSM_ReceivePurple2;
   }
 }
+
+//The expected bit pattern for purple is 110110
+static void ComSM_ReceivePurple2(void)
+{
+
+  if(u16countReceivedBit == 0)
+  {
+    receivingHighBit();
+  }
+  else if(u16countReceivedBit == 1)
+  {
+    receivingHighBit();
+  }
+  else if (u16countReceivedBit == 2)
+  {
+    receivingLowBit();
+  }
+  else if (u16countReceivedBit == 3)
+  {
+    receivingHighBit();
+  }
+  else if(u16countReceivedBit == 4)
+  {
+    receivingHighBit();
+  }
+  else if(u16countReceivedBit == 5)
+  {
+    receivingLowBit();
+  }
+  else if(u16countReceivedBit == 6)
+  {
+    LedOn(PURPLE);
+    u16countReceivedBit = 0;
+    Com_StateMachine = ComSM_ReceiveRed2;
+  }
+}
+
+//The expected bit pattern for red is 111100
+static void ComSM_ReceiveRed2(void)
+{
+
+  if(u16countReceivedBit == 0)
+  {
+    receivingHighBit();
+  }
+  else if(u16countReceivedBit == 1)
+  {
+    receivingHighBit();
+  }
+  else if (u16countReceivedBit == 2)
+  {
+    receivingHighBit();
+  }
+  else if (u16countReceivedBit == 3)
+  {
+    receivingHighBit();
+  }
+  else if(u16countReceivedBit == 4)
+  {
+    receivingLowBit();
+  }
+  else if(u16countReceivedBit == 5)
+  {
+    receivingLowBit();
+  }
+  else if(u16countReceivedBit == 6)
+  {
+    LedOn(RED);
+    u16countReceivedBit = 0;
+    Com_StateMachine = ComSM_ReceiveWhite2;
+  }
+}
+
+//The expected bit pattern for white is 101010
+static void ComSM_ReceiveWhite2(void)
+{
+  if(u16countReceivedBit == 0)
+  {
+    receivingHighBit();
+  }
+  else if(u16countReceivedBit == 1)
+  {
+    receivingLowBit();
+  }
+  else if (u16countReceivedBit == 2)
+  {
+    receivingHighBit();
+  }
+  else if (u16countReceivedBit == 3)
+  {
+    receivingLowBit();
+  }
+  else if(u16countReceivedBit == 4)
+  {
+    receivingHighBit();
+  }
+  else if(u16countReceivedBit == 5)
+  {
+    receivingLowBit();
+  }
+  else if(u16countReceivedBit == 6)
+  {
+    LedOn(WHITE);
+    u16countReceivedBit = 0;
+    Com_StateMachine = ComSM_ReceiveBlue2;
+  }
+}
+
+//The expected bit pattern for blue is 110000
+static void ComSM_ReceiveBlue2(void)
+{
+  if(u16countReceivedBit == 0)
+  {
+    receivingHighBit();
+  }
+  else if(u16countReceivedBit == 1)
+  {
+    receivingHighBit();
+  }
+  else if (u16countReceivedBit == 2)
+  {
+    receivingLowBit();
+  }
+  else if (u16countReceivedBit == 3)
+  {
+    receivingLowBit();
+  }
+  else if(u16countReceivedBit == 4)
+  {
+    receivingLowBit();
+  }
+  else if(u16countReceivedBit == 5)
+  {
+    receivingLowBit();
+  }
+  else if(u16countReceivedBit == 6)
+  {
+    LedOn(BLUE);
+    u16countReceivedBit = 0;
+    Com_StateMachine = ComSM_ReceiveCyan2;
+  }
+}
+
+//The expected bit pattern for cyan is 111110
+static void ComSM_ReceiveCyan2(void)
+{
+  if(u16countReceivedBit == 0)
+  {
+    receivingHighBit();
+  }
+  else if(u16countReceivedBit == 1)
+  {
+    receivingHighBit();
+  }
+  else if (u16countReceivedBit == 2)
+  {
+    receivingHighBit();
+  }
+  else if (u16countReceivedBit == 3)
+  {
+    receivingHighBit();
+  }
+  else if(u16countReceivedBit == 4)
+  {
+    receivingHighBit();
+  }
+  else if(u16countReceivedBit == 5)
+  {
+    receivingLowBit();
+  }
+  else if(u16countReceivedBit == 6)
+  {
+    LedOn(CYAN);
+    u16countReceivedBit = 0;
+    Com_StateMachine = ComSM_ReceiveOrange2;
+  }
+}
+
+//The expected bit pattern for orange is 101000
+static void ComSM_ReceiveOrange2(void)
+{
+
+  if(u16countReceivedBit == 0)
+  {
+    receivingHighBit();
+  }
+  else if(u16countReceivedBit == 1)
+  {
+    receivingLowBit();
+  }
+  else if (u16countReceivedBit == 2)
+  {
+    receivingHighBit();
+  }
+  else if (u16countReceivedBit == 3)
+  {
+    receivingLowBit();
+  }
+  else if(u16countReceivedBit == 4)
+  {
+    receivingLowBit();
+  }
+  else if(u16countReceivedBit == 5)
+  {
+    receivingLowBit();
+  }
+  else if(u16countReceivedBit == 6)
+  {
+    LedOn(ORANGE);
+    u16countReceivedBit = 0;
+    Com_StateMachine = ComSM_ReceiveYellow2;
+  }
+}
+
+//The expected bit pattern for yellow is 110010
+static void ComSM_ReceiveYellow2(void)
+{
+  if(u16countReceivedBit == 0)
+  {
+    receivingHighBit();
+  }
+  else if(u16countReceivedBit == 1)
+  {
+    receivingHighBit();
+  }
+  else if (u16countReceivedBit == 2)
+  {
+    receivingLowBit();
+  }
+  else if (u16countReceivedBit == 3)
+  {
+    receivingLowBit();
+  }
+  else if(u16countReceivedBit == 4)
+  {
+    receivingHighBit();
+  }
+  else if(u16countReceivedBit == 5)
+  {
+    receivingLowBit();
+  }
+  else if(u16countReceivedBit == 6)
+  {
+    LedOn(YELLOW);
+    u16countReceivedBit = 0;
+  }
+}
+
+
+/*-----------------------------------------------------------------------------------------*/
+/*The Transmitting States*/
+
 //The following transmit states let the user scroll through each different colour to select one to transmit
 
 static void ComSM_TransmitWhite(void)
