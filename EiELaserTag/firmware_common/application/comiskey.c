@@ -346,6 +346,14 @@ static void ComSM_ReceiverMode(void)
 //The expected bit pattern for white is 101010
 static void ComSM_ReceiveWhite(void)
 {
+  LedOff(WHITE);
+  LedOff(PURPLE);
+  LedOff(BLUE);
+  LedOff(CYAN);
+  LedOff(GREEN);
+  LedOff(YELLOW);
+  LedOff(ORANGE);
+  LedOff(RED);
   if(IsButtonPressed(BUTTON2))
   {
     Com_StateMachine = ComSM_ReceiveGreen2;
@@ -385,7 +393,14 @@ static void ComSM_ReceiveWhite(void)
 //The expected bit pattern for purple is 110110
 static void ComSM_ReceivePurple(void)
 {
-
+  if(IsButtonPressed(BUTTON2))
+  {
+    Com_StateMachine = ComSM_ReceiveGreen2;
+  }
+  if(IsButtonPressed(BUTTON3))
+  {
+    Com_StateMachine = ComSM_ReceiveWhite;
+  }
   if(u16countReceivedBit == 0)
   {
     receivingHighBit();
@@ -421,6 +436,14 @@ static void ComSM_ReceivePurple(void)
 //The expected bit pattern for blue is 110000
 static void ComSM_ReceiveBlue(void)
 {
+  if(IsButtonPressed(BUTTON2))
+  {
+    Com_StateMachine = ComSM_ReceiveGreen2;
+  }
+  if(IsButtonPressed(BUTTON3))
+  {
+    Com_StateMachine = ComSM_ReceiveWhite;
+  }
   if(u16countReceivedBit == 0)
   {
     receivingHighBit();
@@ -456,6 +479,14 @@ static void ComSM_ReceiveBlue(void)
 //The expected bit pattern for cyan is 111110
 static void ComSM_ReceiveCyan(void)
 {
+  if(IsButtonPressed(BUTTON2))
+  {
+    Com_StateMachine = ComSM_ReceiveGreen2;
+  }
+  if(IsButtonPressed(BUTTON3))
+  {
+    Com_StateMachine = ComSM_ReceiveWhite;
+  }
   if(u16countReceivedBit == 0)
   {
     receivingHighBit();
@@ -491,7 +522,14 @@ static void ComSM_ReceiveCyan(void)
 //The expected bit pattern for green is 111010
 static void ComSM_ReceiveGreen(void)
 {
-
+  if(IsButtonPressed(BUTTON2))
+  {
+    Com_StateMachine = ComSM_ReceiveGreen2;
+  }
+  if(IsButtonPressed(BUTTON3))
+  {
+    Com_StateMachine = ComSM_ReceiveWhite;
+  }
   if(u16countReceivedBit == 0)
   {
     receivingHighBit();
@@ -527,6 +565,14 @@ static void ComSM_ReceiveGreen(void)
 //The expected bit pattern for yellow is 110010
 static void ComSM_ReceiveYellow(void)
 {
+  if(IsButtonPressed(BUTTON2))
+  {
+    Com_StateMachine = ComSM_ReceiveGreen2;
+  }
+  if(IsButtonPressed(BUTTON3))
+  {
+    Com_StateMachine = ComSM_ReceiveWhite;
+  }
   if(u16countReceivedBit == 0)
   {
     receivingHighBit();
@@ -563,6 +609,14 @@ static void ComSM_ReceiveYellow(void)
 static void ComSM_ReceiveOrange(void)
 {
 
+  if(IsButtonPressed(BUTTON2))
+  {
+    Com_StateMachine = ComSM_ReceiveGreen2;
+  }
+  if(IsButtonPressed(BUTTON3))
+  {
+    Com_StateMachine = ComSM_ReceiveWhite;
+  }
   if(u16countReceivedBit == 0)
   {
     receivingHighBit();
@@ -598,7 +652,15 @@ static void ComSM_ReceiveOrange(void)
 //The expected bit pattern for red is 111100
 static void ComSM_ReceiveRed(void)
 {
-
+  if(IsButtonPressed(BUTTON2))
+  {
+    Com_StateMachine = ComSM_ReceiveGreen2;
+  }
+  if(IsButtonPressed(BUTTON3))
+  {
+    Com_StateMachine = ComSM_ReceiveWhite;
+  }
+  
   if(u16countReceivedBit == 0)
   {
     receivingHighBit();
@@ -639,7 +701,23 @@ The only difference is the order of the colors is different, even the bit patter
 //The expected bit pattern for green is 111010
 static void ComSM_ReceiveGreen2(void)
 {
-
+  LedOff(WHITE);
+  LedOff(PURPLE);
+  LedOff(BLUE);
+  LedOff(CYAN);
+  LedOff(GREEN);
+  LedOff(YELLOW);
+  LedOff(ORANGE);
+  LedOff(RED);
+  if(IsButtonPressed(BUTTON2))
+  {
+    Com_StateMachine = ComSM_ReceiveGreen2;
+  }
+  if(IsButtonPressed(BUTTON3))
+  {
+    Com_StateMachine = ComSM_ReceiveWhite;
+  }
+  
   if(u16countReceivedBit == 0)
   {
     receivingHighBit();
@@ -676,6 +754,15 @@ static void ComSM_ReceiveGreen2(void)
 static void ComSM_ReceivePurple2(void)
 {
 
+  if(IsButtonPressed(BUTTON2))
+  {
+    Com_StateMachine = ComSM_ReceiveGreen2;
+  }
+  if(IsButtonPressed(BUTTON3))
+  {
+    Com_StateMachine = ComSM_ReceiveWhite;
+  }
+  
   if(u16countReceivedBit == 0)
   {
     receivingHighBit();
@@ -711,7 +798,15 @@ static void ComSM_ReceivePurple2(void)
 //The expected bit pattern for red is 111100
 static void ComSM_ReceiveRed2(void)
 {
-
+  if(IsButtonPressed(BUTTON2))
+  {
+    Com_StateMachine = ComSM_ReceiveGreen2;
+  }
+  if(IsButtonPressed(BUTTON3))
+  {
+    Com_StateMachine = ComSM_ReceiveWhite;
+  }
+  
   if(u16countReceivedBit == 0)
   {
     receivingHighBit();
@@ -747,6 +842,15 @@ static void ComSM_ReceiveRed2(void)
 //The expected bit pattern for white is 101010
 static void ComSM_ReceiveWhite2(void)
 {
+  if(IsButtonPressed(BUTTON2))
+  {
+    Com_StateMachine = ComSM_ReceiveGreen2;
+  }
+  if(IsButtonPressed(BUTTON3))
+  {
+    Com_StateMachine = ComSM_ReceiveWhite;
+  }
+  
   if(u16countReceivedBit == 0)
   {
     receivingHighBit();
@@ -781,7 +885,16 @@ static void ComSM_ReceiveWhite2(void)
 
 //The expected bit pattern for blue is 110000
 static void ComSM_ReceiveBlue2(void)
-{
+{  
+  if(IsButtonPressed(BUTTON2))
+  {
+    Com_StateMachine = ComSM_ReceiveGreen2;
+  }
+  if(IsButtonPressed(BUTTON3))
+  {
+    Com_StateMachine = ComSM_ReceiveWhite;
+  }
+  
   if(u16countReceivedBit == 0)
   {
     receivingHighBit();
@@ -817,6 +930,15 @@ static void ComSM_ReceiveBlue2(void)
 //The expected bit pattern for cyan is 111110
 static void ComSM_ReceiveCyan2(void)
 {
+  if(IsButtonPressed(BUTTON2))
+  {
+    Com_StateMachine = ComSM_ReceiveGreen2;
+  }
+  if(IsButtonPressed(BUTTON3))
+  {
+    Com_StateMachine = ComSM_ReceiveWhite;
+  }
+  
   if(u16countReceivedBit == 0)
   {
     receivingHighBit();
@@ -852,7 +974,15 @@ static void ComSM_ReceiveCyan2(void)
 //The expected bit pattern for orange is 101000
 static void ComSM_ReceiveOrange2(void)
 {
-
+  if(IsButtonPressed(BUTTON2))
+  {
+    Com_StateMachine = ComSM_ReceiveGreen2;
+  }
+  if(IsButtonPressed(BUTTON3))
+  {
+    Com_StateMachine = ComSM_ReceiveWhite;
+  }
+  
   if(u16countReceivedBit == 0)
   {
     receivingHighBit();
@@ -887,7 +1017,16 @@ static void ComSM_ReceiveOrange2(void)
 
 //The expected bit pattern for yellow is 110010
 static void ComSM_ReceiveYellow2(void)
-{
+{  
+  if(IsButtonPressed(BUTTON2))
+  {
+    Com_StateMachine = ComSM_ReceiveGreen2;
+  }
+  if(IsButtonPressed(BUTTON3))
+  {
+    Com_StateMachine = ComSM_ReceiveWhite;
+  }
+  
   if(u16countReceivedBit == 0)
   {
     receivingHighBit();
