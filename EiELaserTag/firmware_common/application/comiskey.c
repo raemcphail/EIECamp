@@ -111,6 +111,7 @@ Sets u16countBit to 0 if the receiver isn't detecting a signal at any point duri
 */
 void receivingHighBit(void)
 {
+   
     u32 *pu32Address;
     pu32Address = (u32*)(&(AT91C_BASE_PIOA->PIO_PDSR));
     u32 u32truthValue = (*pu32Address) & 0x00004000;
