@@ -4,8 +4,24 @@ File: comiskey.c
 
 
 Description:
-This is a comiskey.c file template 
+This is a project to teach about IR transmitter and receivers at a summer camp. The project involves
+a board with a transmitter and a board with a receiver.There are 3 modes, 
+transmitter mode (for the board with the transmitter), 
+receiver mode 1 and receiver mode 2 (both for the board with the receiver).
 
+By default transmitter mode is selected. The transmitter board can use BUTTON1 and BUTTON2 to scroll
+through and select each colour. The selected colour will be the only LED that
+is ON. Each colour transmitts a different bit pattern, hold BUTTON0 to transmit the selected 
+colour's bit pattern.
+
+Press BUTTON3 to go into receiver mode 1. In this mode the receiver expects the colours in 
+the order they appear on the board: white, purple, blue, cyan, green, yellow, orange, red.
+The recevier board will turn the LED it was expecting ON when it sees the bit pattern of the colour it is expecting
+The purpose of this mode is to test that the transmitter board has each bit pattern programmed 
+correctly. To reset this mdoe press BUTTON3 again.
+
+From receiver mode 1 press BUTTON2 to go to receiver mode 2, receiver mode 2 
+cannot be reached from transmiter mode. In receiver mode 2 
 ------------------------------------------------------------------------------------------------------------------------
 API:
 
@@ -13,7 +29,7 @@ Public functions:
 
 
 Protected System functions:
-void LaserTagInitialize(void)
+void ComInitialize(void)
 Runs required initialzation for the task.  Should only be called once in main init section.
 
 void LaserTagRunActiveState(void)
@@ -54,12 +70,12 @@ static bool LaserTag_Toggle;*/
 static u16 u16Count5ms;
 static u16 u16countHigh;
 static u16 u16countLow;
-static u16 u16Lives;
-static u16 u16RecoverTime;
-static u16 delimiter = 600;
+//static u16 u16Lives;
+//static u16 u16RecoverTime;
+//static u16 delimiter = 600;
 static u16 u16countReceivedBit;//keeps track of which bit in the pattern we expecting next
-static u16 u16countSentBit;//keeps track of which bit in the pattern is currently being sent
-static u16 u16nextBit;//keeps track of what the next bit in the bit pattern is
+//static u16 u16countSentBit;//keeps track of which bit in the pattern is currently being sent
+//static u16 u16nextBit;//keeps track of what the next bit in the bit pattern is
 static fnCode_type Com_StateMachine;
 static bool Com_ModulateSwitch;
 
@@ -252,9 +268,9 @@ void ComInitialize(void)
   /* Enable the Interrupt Reg's for MOSI */
   
    /* Set next bit to 1 to start*/
-    u16nextBit = 1; 
+   // u16nextBit = 1; 
    /* Set counter to 0 to start*/
-    u16countSentBit = 0; 
+    //u16countSentBit = 0; 
    /* Set counter to 0 to start*/
     G_u16countSentBit = 0; 
   /* Set counter to 0 to start*/
@@ -322,7 +338,7 @@ static void ComSM_Idle(void)
     TimerStop(TIMER_CHANNEL1);
     Com_ModulateSwitch = FALSE;
     Com_StateMachine = ComSM_TransmitWhite;
-    u16countSentBit = 0;
+    //u16countSentBit = 0;
 } // end ComSM_Idle() 
 
 static void ComSM_ReceiverMode(void)
@@ -1432,26 +1448,6 @@ static void ComSM_TransmitRed(void)
     }
   }
 }
-
-
-static void ComSM_ModulateOn(void)
-{
-  LedOff(WHITE);
-  TimerStart(TIMER_CHANNEL1);
-   
-  if(u16Count5ms >= 4)
-  {
-    u16Count5ms = 0;
-    u16countSentBit++;  
-    Com_StateMachine = ComSM_TransmitWhite;
-  }
-  else
-  {
-    u16Count5ms++;
-  }
-}
-
-
 
 /*-------------------------------------------------------------------------------------------------------------------*/
 /* Handle an error */
