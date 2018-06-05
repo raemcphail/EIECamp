@@ -1157,7 +1157,7 @@ static void ComSM_Song(void)
       PWMAudioSetFrequency(BUZZER1, 800);
       PWMAudioOn(BUZZER1);
   }
-  else
+  else if(u16countSound >= 1800)
   {
     u16countReceivedBit = 0;
     PWMAudioOff(BUZZER1);

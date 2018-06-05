@@ -2,7 +2,23 @@
 File: comiskeySV.c                                                                
 
 Description:
-This is a comiskeySV.c file template 
+This is the student version of comisKey. It is the same project but has parts 
+removed for campers to do. Campers will program the transmitter board to send a
+different bit pattern for each colour. Also this version doesn't have the 
+receiver modes since it will only be used on boards with a transmitter and
+campers must discover the order of the colours for receiver mode 2 on their own.
+
+This is a project to teach about IR transmitter and receivers at a summer camp. 
+The project involves
+a board with a transmitter and a board with a receiver.There are 3 modes, 
+transmitter mode (for the board with the transmitter), 
+receiver mode 1 and receiver mode 2 (both for the board with the receiver).
+
+By default transmitter mode is selected. The transmitter board can use BUTTON1 
+and BUTTON2 to scroll
+through and select each colour. The selected colour will be the only LED that
+is ON. Each colour transmitts a different bit pattern, hold BUTTON0 to transmit 
+the selected colour's bit pattern.
 
 ------------------------------------------------------------------------------------------------------------------------
 API:
@@ -138,7 +154,7 @@ static void ComSVSM_Error(void)
 } /* end UserApp1SM_Error() */
 
 /*-------------------------------------------------------------------------------------------------------------------*/
-/* Transmit white bit pattern */
+/*Wait for button1 or button2 to be pressed*/
 static void ComSVSM_TransmitWhite(void)          
 {
   LedOn(WHITE);
@@ -187,7 +203,7 @@ static void ComSVSM_TransmitWhite(void)
 } /* end ComVSM_TransmitWhite() */
 
 /*-------------------------------------------------------------------------------------------------------------------*/
-/* Transmit purple bit pattern */
+/*Wait for button1 or button2 to be pressed*/
 static void ComSVSM_TransmitPurple(void)          
 {
   LedOn(PURPLE);
@@ -211,7 +227,7 @@ static void ComSVSM_TransmitPurple(void)
 } /* end ComVSM_TransmitPurple() */
 
 /*-------------------------------------------------------------------------------------------------------------------*/
-/* Transmit blue bit pattern */
+/*Wait for button1 or button2 to be pressed*/
 static void ComSVSM_TransmitBlue(void)          
 {  
   LedOn(BLUE);
@@ -233,9 +249,9 @@ static void ComSVSM_TransmitBlue(void)
     //Campers will write there code here
   }
   
-} /* end ComVSM_TransmitBlue() */
+} /* end ComVSM_TransmitPurple() */
 /*-------------------------------------------------------------------------------------------------------------------*/
-/* Transmit cyan bit pattern */
+/*Wait for button1 or button2 to be pressed*/
 static void ComSVSM_TransmitCyan(void)          
 {
   LedOn(CYAN);
@@ -258,7 +274,7 @@ static void ComSVSM_TransmitCyan(void)
   }
 } /* end ComVSM_TransmitCyan() */
 /*-------------------------------------------------------------------------------------------------------------------*/
-/* Transmit green bit pattern */
+/*Wait for button1 or button2 to be pressed*/
 static void ComSVSM_TransmitGreen(void)          
 {
   LedOn(GREEN);
@@ -281,7 +297,7 @@ static void ComSVSM_TransmitGreen(void)
   }
 } /* end ComVSM_TransmitGreen() */
 /*-------------------------------------------------------------------------------------------------------------------*/
-/* Transmit yellow bit pattern */
+/*Wait for button1 or button2 to be pressed*/
 static void ComSVSM_TransmitYellow(void)          
 {
   LedOn(YELLOW);
@@ -304,7 +320,7 @@ static void ComSVSM_TransmitYellow(void)
   }
 } /* end ComVSM_TransmitYellow() */
 /*-------------------------------------------------------------------------------------------------------------------*/
-/* Transmit orange bit pattern */
+/*Wait for button1 or button2 to be pressed*/
 static void ComSVSM_TransmitOrange(void)          
 {
   LedOn(ORANGE);
@@ -326,9 +342,8 @@ static void ComSVSM_TransmitOrange(void)
     //Campers will write there code here
   }
 } /* end ComVSM_TransmitOrange() */
-
 /*-------------------------------------------------------------------------------------------------------------------*/
-/* Transmit red bit pattern */
+/*Wait for button1 or button2 to be pressed*/
 static void ComSVSM_TransmitRed(void)          
 {
   LedOn(RED);

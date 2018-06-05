@@ -57,8 +57,8 @@ extern volatile u32 G_u32SystemTime1s;                 /* From board-specific so
 Global variable definitions with scope limited to this local application.
 Variable names shall start with "UserApp1_" and be declared as static.
 ***********************************************************************************************************************/
-static fnCode_type UserApp1_StateMachine;            /* The state machine function pointer */
-//static u32 UserApp1_u32Timeout;                      /* Timeout counter used across states */
+static fnCode_type UserApp1_StateMachine;            
+/* The state machine function pointer */                      /* Timeout counter used across states */
 
 
 /**********************************************************************************************************************
