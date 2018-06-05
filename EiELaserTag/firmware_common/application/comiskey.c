@@ -4,15 +4,17 @@ File: comiskey.c
 
 
 Description:
-This is a project to teach about IR transmitter and receivers at a summer camp. The project involves
+This is a project to teach about IR transmitter and receivers at a summer camp. 
+The project involves
 a board with a transmitter and a board with a receiver.There are 3 modes, 
 transmitter mode (for the board with the transmitter), 
 receiver mode 1 and receiver mode 2 (both for the board with the receiver).
 
-By default transmitter mode is selected. The transmitter board can use BUTTON1 and BUTTON2 to scroll
+By default transmitter mode is selected. The transmitter board can use BUTTON1 
+and BUTTON2 to scroll
 through and select each colour. The selected colour will be the only LED that
-is ON. Each colour transmitts a different bit pattern, hold BUTTON0 to transmit the selected 
-colour's bit pattern.
+is ON. Each colour transmitts a different bit pattern, hold BUTTON0 to transmit 
+the selected colour's bit pattern.
 
 Press BUTTON3 to go into receiver mode 1. In this mode the receiver 
 expects the colours in the order they appear on the board: white, 
@@ -20,11 +22,11 @@ purple, blue, cyan, green, yellow, orange, red.
 The recevier board will turn the LED it was expecting ON when it sees
 the bit pattern of the colour it is expecting then it will expect 
 the next bit pattern. The purpose of this mode is to test that the
-transmitter board has each bit pattern programmed correctly. To reset this mode press 
-BUTTON3 again.
+transmitter board has each bit pattern programmed correctly. 
+To reset this mode press BUTTON3 again.
 
 From receiver mode 1 press BUTTON2 to go to receiver mode 2, receiver mode 2 
-cannot be reached from transmiter mode. In receiver mode 2 the 
+can only be reached from receiver mode 1. In receiver mode 2 the 
 order of the colours is green, purple, red, white, blue, 
 cyan, orange, yellow. To reset press BUTTON2
 ------------------------------------------------------------------------------------------------------------------------
@@ -70,15 +72,12 @@ extern volatile u32 G_u32SystemTime1s;                 /* From board-specific so
 Global variable definitions with scope limited to this local application.
 Variable names shall start with "Com_" and be declared as static.
 ***********************************************************************************************************************/
-/*static fnCode_type LaserTag_StateMachine; 
-static bool LaserTag_Toggle;*/
+
 static u16 u16Count5ms;
 static u16 u16countHigh;
 static u16 u16countLow;
 static u16 u16countSound;
-static u16 u16countReceivedBit;//keeps track of which bit in the pattern we expecting next
-//static u16 u16countSentBit;//keeps track of which bit in the pattern is currently being sent
-//static u16 u16nextBit;//keeps track of what the next bit in the bit pattern is
+static u16 u16countReceivedBit;
 static fnCode_type Com_StateMachine;
 static bool Com_ModulateSwitch;
 
@@ -95,8 +94,8 @@ Function: Com_38Modulate
 Description:
 Changes the truth value of the boolean Com_ModulateSwitch every time the function
 is called. This boolean is used to determine if tranmitter should be ON or OFF.
-This function gets called every 5 ticks so that the signal tranmitted can be about 38kHz
-and the reciever can detect the signal.
+This function gets called every 5 ticks so that the signal tranmitted can be 
+about 38kHz and the reciever can detect the signal.
 */
 void Com_38Modulate(void)
 {
@@ -119,14 +118,16 @@ void Com_38Modulate(void)
 /*------------------------------------------------------------
 Function: receivingHighBit
 Description:
-Checks if the modulated signal of 38 kHz is received by the GPIO pin PA_14_BLADE_MOSI.
+Checks if a modulated signal of 38 kHz is received by the GPIO pin 
+PA_14_BLADE_MOSI for 5ms.
 Requires:
-PA_14_BLADE_MOSI is configured correctly as an input pin, must check if receives voltage HIGH
-for 5 ms, then VOLTAGE LOW for 5ms, then register that it has been hit and turn an LED on for a bit.
+PA_14_BLADE_MOSI is configured correctly as an input pin, 
 
 Promises:
-Increases u16countBit if there is a High bit (receiver detected signal for 5ms). 
-Sets u16countBit to 0 if the receiver isn't detecting a signal at any point during the 5ms.
+Increases u16countRecievedBit if there is a High bit 
+(receiver detected signal for 5ms). 
+Sets u16countBit to 0 if the receiver isn't detecting a signal at 
+any point during the 5ms.
 */
 void receivingHighBit(void)
 {
@@ -164,14 +165,16 @@ void receivingHighBit(void)
 /*------------------------------------------------------------
 Function: receivingLowBit
 Description:
-Checks if the modulated signal of 38 kHz is received by the GPIO pin PA_14_BLADE_MOSI.
+Checks if no signal is received by the GPIO pin 
+PA_14_BLADE_MOSI for 5ms.
 Requires:
-PA_14_BLADE_MOSI is configured correctly as an input pin, must check if receives voltage HIGH
-for 5 ms, then VOLTAGE LOW for 5ms, then register that it has been hit and turn an LED on for a bit.
+PA_14_BLADE_MOSI is configured correctly as an input pin
 
 Promises:
-Increases u16countBit if there is a Low bit (receiver doesn't detected signal for 5ms). 
-Sets u16countBit to 0 if the receiver detects a signal during the 5ms.
+Increases u16countRecievedBit if there is a Low bit 
+(receiver detected no signal for 5ms). 
+Sets u16countBit to 0 if the receiver is detecting a signal at 
+any point during the 5ms.
 */
 void receivingLowBit(void)
 {
@@ -206,10 +209,13 @@ void receivingLowBit(void)
 /*Function: OnBit
 Description:
 Sends a signal modulated and 38kHz
+
 Requires:
+Transmitter is connected to SCL and GND. GPIO pin 
+PA_14_BLADE_SCL is configured correctly as an output pin
 
 Promises:
-
+Transmit a signal modulated a 38kHz for 5ms
 */
 void OnBit(void)
 {  
@@ -229,11 +235,14 @@ void OnBit(void)
 /*--------------------------------------------------------------------------------------------------------------------*/
 /*Function: OffBit
 Description:
-Sends a signal modulated and 38kHz
+Sends no signal for 5ms
+
 Requires:
+Transmitter is connected to SCL and GND. GPIO pin 
+PA_14_BLADE_SCL is configured correctly as an output pin
 
 Promises:
-
+Does not transmit a signal for 5ms
 */
 void OffBit(void)
 {
@@ -268,7 +277,6 @@ Promises:
 */
 void ComInitialize(void)
 {
-  /* Enable the Interrupt Reg's for MOSI */
    /* Set counter to 0 to start*/
     G_u16countSentBit = 0; 
   /* Set counter to 0 to start*/
@@ -355,12 +363,9 @@ static void ComSM_ReceiverMode(void)
   u16countHigh = 0;
   u16countLow = 0;
   Com_StateMachine = ComSM_ReceiveWhite;
-}
+} //end ComSM_ReceiverMode
 
-//The following receive states wait for a spefic bit pattern, before expecting the next. When the correct bit pattern 
-//is received then a corresponding Led will turn on and the state will change to expect the next bit pattern
-
-//The expected bit pattern for white is 101010
+/*Wait for the bit pattern 101010 then go to ComSM_ReceivePurple*/
 static void ComSM_ReceiveWhite(void)
 {
   LedOff(WHITE);
@@ -405,9 +410,9 @@ static void ComSM_ReceiveWhite(void)
     u16countReceivedBit = 0;
     Com_StateMachine = ComSM_ReceivePurple;
   }
-}
+}/*end ComSM_ReceiveWhite()*/
 
-//The expected bit pattern for purple is 110110
+/*Wait for the bit pattern 110110 then go to ComSM_ReceiveBlue*/
 static void ComSM_ReceivePurple(void)
 {
   if(IsButtonPressed(BUTTON2))
@@ -448,9 +453,9 @@ static void ComSM_ReceivePurple(void)
     u16countReceivedBit = 0;
     Com_StateMachine = ComSM_ReceiveBlue;
   }
-}
+}/*end ComSM_ReceivePurple()*/
 
-//The expected bit pattern for blue is 110000
+/*Wait for the bit pattern 110000 then go to ComSM_ReceiveCyan*/
 static void ComSM_ReceiveBlue(void)
 {
   if(IsButtonPressed(BUTTON2))
@@ -491,9 +496,9 @@ static void ComSM_ReceiveBlue(void)
     u16countReceivedBit = 0;
     Com_StateMachine = ComSM_ReceiveCyan;
   }
-}
+}/*end ComSM_ReceiveBlue()*/
 
-//The expected bit pattern for cyan is 111110
+/*Wait for the bit pattern 111110 then go to ComSM_ReceiveGreen*/
 static void ComSM_ReceiveCyan(void)
 {
   if(IsButtonPressed(BUTTON2))
@@ -534,9 +539,9 @@ static void ComSM_ReceiveCyan(void)
     u16countReceivedBit = 0;
     Com_StateMachine = ComSM_ReceiveGreen;
   }
-}
+}/*end ComSM_ReceiveCyan()*/
 
-//The expected bit pattern for green is 111010
+/*Wait for the bit pattern 111010 then go to ComSM_ReceiveYellow*/
 static void ComSM_ReceiveGreen(void)
 {
   if(IsButtonPressed(BUTTON2))
@@ -577,9 +582,9 @@ static void ComSM_ReceiveGreen(void)
     u16countReceivedBit = 0;
     Com_StateMachine = ComSM_ReceiveYellow;
   }
-}
+}/*end ComSM_ReceiveGreen()*/
 
-//The expected bit pattern for yellow is 110010
+/*Wait for the bit pattern 110010 then go to ComSM_ReceiveOrange*/
 static void ComSM_ReceiveYellow(void)
 {
   if(IsButtonPressed(BUTTON2))
@@ -620,12 +625,11 @@ static void ComSM_ReceiveYellow(void)
     u16countReceivedBit = 0;
     Com_StateMachine = ComSM_ReceiveOrange;
   }
-}
+}/*end ComSM_ReceiveYellow()*/
 
-//The expected bit pattern for orange is 101000
+/*Wait for the bit pattern 101000 then go to ComSM_ReceiveRed*/
 static void ComSM_ReceiveOrange(void)
 {
-
   if(IsButtonPressed(BUTTON2))
   {
     Com_StateMachine = ComSM_ReceiveGreen2;
@@ -664,9 +668,9 @@ static void ComSM_ReceiveOrange(void)
     u16countReceivedBit = 0;
     Com_StateMachine = ComSM_ReceiveRed;
   }
-}
+}/*end ComSM_ReceiveOrange()*/
 
-//The expected bit pattern for red is 111100
+/*Wait for the bit pattern 111100*/
 static void ComSM_ReceiveRed(void)
 {
   if(IsButtonPressed(BUTTON2))
@@ -707,15 +711,15 @@ static void ComSM_ReceiveRed(void)
     LedOn(RED);
     u16countReceivedBit = 0;
   }
-}
-
+}/*end ComSM_ReceiveRed()*/
 
 /*-------------------------------------------------------------------------------------*/
-/* Receiver Mode 2 for final challenge in Communication is key. It works the same way as 
+/* Receiver Mode 2 for final challenge in Communication is Key. It works the same way as 
 before where each state expects a different colour then expects the next colour.
 The only difference is the order of the colors is different, even the bit patterns are the same*/
 
-//The expected bit pattern for green is 111010
+
+/*Wait for the bit pattern 111010 then go to ComSM_ReceivePurple2*/
 static void ComSM_ReceiveGreen2(void)
 {
   LedOff(WHITE);
@@ -766,11 +770,11 @@ static void ComSM_ReceiveGreen2(void)
     Com_StateMachine = ComSM_ReceivePurple2;
   }
 }
+/*end ComSM_ReceiveGreen2()*/
 
-//The expected bit pattern for purple is 110110
+/*Wait for the bit pattern 110110 then go to ComSM_ReceiveRed2*/
 static void ComSM_ReceivePurple2(void)
 {
-
   if(IsButtonPressed(BUTTON2))
   {
     Com_StateMachine = ComSM_ReceiveGreen2;
@@ -810,9 +814,9 @@ static void ComSM_ReceivePurple2(void)
     u16countReceivedBit = 0;
     Com_StateMachine = ComSM_ReceiveRed2;
   }
-}
+}/*end ComSM_ReceivePurple2()*/
 
-//The expected bit pattern for red is 111100
+/*Wait for the bit pattern 111100 then go to ComSM_ReceiveWhite2*/
 static void ComSM_ReceiveRed2(void)
 {
   if(IsButtonPressed(BUTTON2))
@@ -854,9 +858,9 @@ static void ComSM_ReceiveRed2(void)
     u16countReceivedBit = 0;
     Com_StateMachine = ComSM_ReceiveWhite2;
   }
-}
+}/*end ComSM_ReceiveRed2()*/
 
-//The expected bit pattern for white is 101010
+/*Wait for the bit pattern 101010 then go to ComSM_ReceiveBlue2*/
 static void ComSM_ReceiveWhite2(void)
 {
   if(IsButtonPressed(BUTTON2))
@@ -898,9 +902,9 @@ static void ComSM_ReceiveWhite2(void)
     u16countReceivedBit = 0;
     Com_StateMachine = ComSM_ReceiveBlue2;
   }
-}
+}/*end ComSM_ReceiveWhite2()*/
 
-//The expected bit pattern for blue is 110000
+/*Wait for the bit pattern 110000 then go to ComSM_ReceiveCyan2*/
 static void ComSM_ReceiveBlue2(void)
 {  
   if(IsButtonPressed(BUTTON2))
@@ -942,9 +946,9 @@ static void ComSM_ReceiveBlue2(void)
     u16countReceivedBit = 0;
     Com_StateMachine = ComSM_ReceiveCyan2;
   }
-}
+}/*end ComSM_ReceiveBlue2()*/
 
-//The expected bit pattern for cyan is 111110
+/*Wait for the bit pattern 111110 then go to ComSM_ReceiveOrange2*/
 static void ComSM_ReceiveCyan2(void)
 {
   if(IsButtonPressed(BUTTON2))
@@ -986,9 +990,9 @@ static void ComSM_ReceiveCyan2(void)
     u16countReceivedBit = 0;
     Com_StateMachine = ComSM_ReceiveOrange2;
   }
-}
+}/*end ComSM_ReceiveCyan2()*/
 
-//The expected bit pattern for orange is 101000
+/*Wait for the bit pattern 101000 then go to ComSM_ReceiveYellow2*/
 static void ComSM_ReceiveOrange2(void)
 {
   if(IsButtonPressed(BUTTON2))
@@ -1030,9 +1034,9 @@ static void ComSM_ReceiveOrange2(void)
     u16countReceivedBit = 0;
     Com_StateMachine = ComSM_ReceiveYellow2;
   }
-}
+}/*end ComSM_ReceiveOrange2()*/
 
-//The expected bit pattern for yellow is 110010
+/*Wait for the bit pattern 110010 then go to ComSM_Song*/
 static void ComSM_ReceiveYellow2(void)
 {  
   if(IsButtonPressed(BUTTON2))
@@ -1081,9 +1085,9 @@ static void ComSM_ReceiveYellow2(void)
     u16countReceivedBit = 0;
     Com_StateMachine = ComSM_Song;
   }
-}
+}/*end ComSM_ReceiveYellow2()*/
 
-
+/*Wait for 1800ms then go to ComSM_ReceiveGreen2*/
 static void ComSM_Song(void)
 {
   
@@ -1157,16 +1161,18 @@ static void ComSM_Song(void)
   {
     u16countReceivedBit = 0;
     PWMAudioOff(BUZZER1);
-    Com_StateMachine = ComSM_ReceiveGreen2;
     u16countSound = 0;
+    Com_StateMachine = ComSM_ReceiveGreen2;
+    
   }
-}
+}/*end ComSM_Song*/
 
 /*-----------------------------------------------------------------------------------------*/
 /*The Transmitting States*/
 
 //The following transmit states let the user scroll through each different colour to select one to transmit
 
+/*Wait for button1 or button2 to be pressed*/
 static void ComSM_TransmitWhite(void)
 {
   LedOn(WHITE);
@@ -1217,9 +1223,9 @@ static void ComSM_TransmitWhite(void)
       OffBit();
     }
   }
+}/*end ComSM_TransmitWhite*/
 
-}
-
+/*Wait for button1 or button2 to be pressed*/
 static void ComSM_TransmitPurple(void)
 {
   LedOn(PURPLE);
@@ -1263,8 +1269,9 @@ static void ComSM_TransmitPurple(void)
       OffBit();
     }
   }
-}
+}/*end ComSM_TransmitPurple*/
 
+/*Wait for button1 or button2 to be pressed*/
 static void ComSM_TransmitBlue(void)
 {
   LedOn(BLUE);
@@ -1308,8 +1315,9 @@ static void ComSM_TransmitBlue(void)
       OffBit();
     }
   }
-}
+}/*end ComSM_TransmitBlue*/
 
+/*Wait for button1 or button2 to be pressed*/
 static void ComSM_TransmitCyan(void)
 {
   LedOn(CYAN);
@@ -1353,8 +1361,9 @@ static void ComSM_TransmitCyan(void)
       OffBit();
     }
   }
-}
+}/*end ComSM_TransmitCyan*/
 
+/*Wait for button1 or button2 to be pressed*/
 static void ComSM_TransmitGreen(void)
 {
   LedOn(GREEN);
@@ -1398,8 +1407,9 @@ static void ComSM_TransmitGreen(void)
       OffBit();
     }
   }
-}
+}/*end ComSM_TransmitGreen*/
 
+/*Wait for button1 or button2 to be pressed*/
 static void ComSM_TransmitYellow(void)
 {
   LedOn(YELLOW);
@@ -1443,8 +1453,9 @@ static void ComSM_TransmitYellow(void)
       OffBit();
     }
   }
-}
+}/*end ComSM_TransmitYellow*/
 
+/*Wait for button1 or button2 to be pressed*/
 static void ComSM_TransmitOrange(void)
 {
   LedOn(ORANGE);
@@ -1488,8 +1499,9 @@ static void ComSM_TransmitOrange(void)
       OffBit();
     }
   }
-}
+}/*end ComSM_TransmitOrange*/
 
+/*Wait for button1 or button2 to be pressed*/
 static void ComSM_TransmitRed(void)
 {
   LedOn(RED);
@@ -1533,7 +1545,8 @@ static void ComSM_TransmitRed(void)
       OffBit();
     }
   }
-}
+}/*end ComSM_TransmitRed*/
+
 
 /*-------------------------------------------------------------------------------------------------------------------*/
 /* Handle an error */
