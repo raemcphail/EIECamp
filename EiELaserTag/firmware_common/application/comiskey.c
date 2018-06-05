@@ -14,14 +14,19 @@ through and select each colour. The selected colour will be the only LED that
 is ON. Each colour transmitts a different bit pattern, hold BUTTON0 to transmit the selected 
 colour's bit pattern.
 
-Press BUTTON3 to go into receiver mode 1. In this mode the receiver expects the colours in 
-the order they appear on the board: white, purple, blue, cyan, green, yellow, orange, red.
-The recevier board will turn the LED it was expecting ON when it sees the bit pattern of the colour it is expecting
-The purpose of this mode is to test that the transmitter board has each bit pattern programmed 
-correctly. To reset this mdoe press BUTTON3 again.
+Press BUTTON3 to go into receiver mode 1. In this mode the receiver 
+expects the colours in the order they appear on the board: white, 
+purple, blue, cyan, green, yellow, orange, red.
+The recevier board will turn the LED it was expecting ON when it sees
+the bit pattern of the colour it is expecting then it will expect 
+the next bit pattern. The purpose of this mode is to test that the
+transmitter board has each bit pattern programmed correctly. To reset this mode press 
+BUTTON3 again.
 
 From receiver mode 1 press BUTTON2 to go to receiver mode 2, receiver mode 2 
-cannot be reached from transmiter mode. In receiver mode 2 
+cannot be reached from transmiter mode. In receiver mode 2 the 
+order of the colours is green, purple, red, white, blue, 
+cyan, orange, yellow. To reset press BUTTON2
 ------------------------------------------------------------------------------------------------------------------------
 API:
 
@@ -70,9 +75,7 @@ static bool LaserTag_Toggle;*/
 static u16 u16Count5ms;
 static u16 u16countHigh;
 static u16 u16countLow;
-//static u16 u16Lives;
-//static u16 u16RecoverTime;
-//static u16 delimiter = 600;
+static u16 u16countSound;
 static u16 u16countReceivedBit;//keeps track of which bit in the pattern we expecting next
 //static u16 u16countSentBit;//keeps track of which bit in the pattern is currently being sent
 //static u16 u16nextBit;//keeps track of what the next bit in the bit pattern is
@@ -266,11 +269,6 @@ Promises:
 void ComInitialize(void)
 {
   /* Enable the Interrupt Reg's for MOSI */
-  
-   /* Set next bit to 1 to start*/
-   // u16nextBit = 1; 
-   /* Set counter to 0 to start*/
-    //u16countSentBit = 0; 
    /* Set counter to 0 to start*/
     G_u16countSentBit = 0; 
   /* Set counter to 0 to start*/
@@ -280,9 +278,13 @@ void ComInitialize(void)
   /* Set counter to 0 to start*/
     u16countLow = 0;
   /* Set 5ms counter to 0 to start*/
-  u16Count5ms = 0;
+    u16Count5ms = 0;
+  /* Set sound counter to 0 to start*/
+    u16countSound = 0;
   /* Set switch to false to start. */
-  Com_ModulateSwitch = FALSE;
+    Com_ModulateSwitch = FALSE;
+  /* sets buzzer1 frequency to 500 */
+  PWMAudioSetFrequency(BUZZER1, 500);
    /* Set Timer with 5 tick period before inturrupt. */
   TimerSet(TIMER_CHANNEL1, 0x0005);
    /* Sets Com_38Modulate to the timer function ptr */
@@ -319,7 +321,6 @@ Promises:
 void ComRunActiveState(void)
 {
   Com_StateMachine();
-
 } /* end ComRunActiveState */
 
 
@@ -338,7 +339,6 @@ static void ComSM_Idle(void)
     TimerStop(TIMER_CHANNEL1);
     Com_ModulateSwitch = FALSE;
     Com_StateMachine = ComSM_TransmitWhite;
-    //u16countSentBit = 0;
 } // end ComSM_Idle() 
 
 static void ComSM_ReceiverMode(void)
@@ -1070,11 +1070,97 @@ static void ComSM_ReceiveYellow2(void)
   }
   else if(u16countReceivedBit == 6)
   {
-    LedOn(YELLOW);
+    LedOff(RED);
+    LedOff(ORANGE);
+    LedOff(YELLOW);
+    LedOff(GREEN);
+    LedOff(CYAN);
+    LedOff(BLUE);
+    LedOff(PURPLE);
+    LedOff(WHITE);
     u16countReceivedBit = 0;
+    Com_StateMachine = ComSM_Song;
   }
 }
 
+
+static void ComSM_Song(void)
+{
+  
+    u16countSound++;
+    if(u16countSound < 200)
+    {
+      LedOn(RED);
+      LedOn(BLUE);
+      LedOn(WHITE);
+      PWMAudioSetFrequency(BUZZER1, 400);
+      PWMAudioOn(BUZZER1);
+    }
+    else if(u16countSound < 400)
+    {
+      LedOff(RED);
+      LedOff(BLUE);
+      LedOff(WHITE);
+      LedOn(PURPLE);
+      LedOn(YELLOW);
+      LedOn(CYAN);
+      PWMAudioSetFrequency(BUZZER1, 500);
+      PWMAudioOn(BUZZER1);
+    }
+     else if(u16countSound < 600)
+    {
+      LedOn(GREEN);
+      LedOn(ORANGE);
+      LedOn(BLUE);
+      LedOff(PURPLE);
+      LedOff(YELLOW);
+      LedOff(CYAN);
+      PWMAudioSetFrequency(BUZZER1, 600);
+      PWMAudioOn(BUZZER1);
+    }
+    else if(u16countSound < 900)
+    {
+      LedOn(YELLOW);
+      LedOn(WHITE);
+      LedOn(CYAN);
+      LedOff(GREEN);
+      LedOff(ORANGE);
+      LedOff(BLUE);
+      PWMAudioSetFrequency(BUZZER1, 700);
+      PWMAudioOn(BUZZER1);
+    }
+    else if(u16countSound < 1300)
+    {
+      LedOn(PURPLE);
+      LedOn(GREEN);
+      LedOn(RED);
+      LedOff(YELLOW);
+      LedOff(WHITE);
+      LedOff(CYAN);
+      PWMAudioSetFrequency(BUZZER1, 500);
+      PWMAudioOn(BUZZER1);
+    }
+    else if(u16countSound < 1800)
+    {
+      LedOn(GREEN);
+      LedOn(ORANGE);
+      LedOn(BLUE);
+      LedOn(PURPLE);
+      LedOn(YELLOW);
+      LedOn(CYAN);
+      LedOn(RED);
+      LedOn(WHITE);
+      PWMAudioSetFrequency(BUZZER1, 800);
+      PWMAudioOn(BUZZER1);
+  }
+  else
+  {
+    u16countReceivedBit = 0;
+    PWMAudioOff(BUZZER1);
+    Com_StateMachine = ComSM_ReceiveGreen2;
+    u16countSound = 0;
+  }
+}
 
 /*-----------------------------------------------------------------------------------------*/
 /*The Transmitting States*/

@@ -89,7 +89,6 @@ static void ComSM_TransmitOrange(void);
 static void ComSM_TransmitRed(void);
 
 static void ComSM_ReceiverMode(void);
-
 static void ComSM_ReceiveWhite(void);
 static void ComSM_ReceivePurple(void);
 static void ComSM_ReceiveBlue(void);
@@ -107,6 +106,8 @@ static void ComSM_ReceiveGreen2(void);
 static void ComSM_ReceiveYellow2(void);
 static void ComSM_ReceiveOrange2(void);
 static void ComSM_ReceiveRed2(void);
+
+static void ComSM_Song (void);
 
 #endif /* __COMISKEY_H */
 
