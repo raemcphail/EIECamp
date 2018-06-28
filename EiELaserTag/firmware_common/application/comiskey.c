@@ -455,7 +455,7 @@ static void ComSM_ReceivePurple(void)
   }
 }/*end ComSM_ReceivePurple()*/
 
-/*Wait for the bit pattern 110000 then go to ComSM_ReceiveCyan*/
+/*Wait for the bit pattern 100100 then go to ComSM_ReceiveCyan*/
 static void ComSM_ReceiveBlue(void)
 {
   if(IsButtonPressed(BUTTON2))
@@ -904,7 +904,7 @@ static void ComSM_ReceiveWhite2(void)
   }
 }/*end ComSM_ReceiveWhite2()*/
 
-/*Wait for the bit pattern 110000 then go to ComSM_ReceiveCyan2*/
+/*Wait for the bit pattern 100100 then go to ComSM_ReceiveCyan2*/
 static void ComSM_ReceiveBlue2(void)
 {  
   if(IsButtonPressed(BUTTON2))
