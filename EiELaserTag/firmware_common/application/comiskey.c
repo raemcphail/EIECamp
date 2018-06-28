@@ -472,7 +472,7 @@ static void ComSM_ReceiveBlue(void)
   }
   else if(u16countReceivedBit == 1)
   {
-    receivingHighBit();
+    receivingLowBit();
   }
   else if (u16countReceivedBit == 2)
   {
@@ -480,7 +480,7 @@ static void ComSM_ReceiveBlue(void)
   }
   else if (u16countReceivedBit == 3)
   {
-    receivingLowBit();
+    receivingHighBit();
   }
   else if(u16countReceivedBit == 4)
   {
@@ -922,7 +922,7 @@ static void ComSM_ReceiveBlue2(void)
   }
   else if(u16countReceivedBit == 1)
   {
-    receivingHighBit();
+    receivingLowBit();
   }
   else if (u16countReceivedBit == 2)
   {
@@ -930,7 +930,7 @@ static void ComSM_ReceiveBlue2(void)
   }
   else if (u16countReceivedBit == 3)
   {
-    receivingLowBit();
+    receivingHighBit();
   }
   else if(u16countReceivedBit == 4)
   {
@@ -1289,14 +1289,14 @@ static void ComSM_TransmitBlue(void)
   }
   if(IsButtonPressed(BUTTON0))
   {
-    //bit pattern transmitted is 110000
+    //bit pattern transmitted is 100100
     if(G_u16countSentBit == 0)
     {  
       OnBit();
     }
      if(G_u16countSentBit == 1)
     {  
-      OnBit();
+      OffBit();
     }
       if(G_u16countSentBit == 2)
     {  
@@ -1304,7 +1304,7 @@ static void ComSM_TransmitBlue(void)
     }
     if(G_u16countSentBit == 3)
     {  
-      OffBit();
+      OnBit();
     }
     if(G_u16countSentBit == 4)
     {  
