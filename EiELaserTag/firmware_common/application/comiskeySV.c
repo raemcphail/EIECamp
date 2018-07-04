@@ -173,7 +173,7 @@ static void ComSVSM_TransmitWhite(void)
   
   if(IsButtonPressed(BUTTON0))
   {
-    //bit pattern transmitted is 101010
+    //bit pattern transmitted is: 101010
     if(G_u16countSentBit == 0)
     {  
       OnBit();
@@ -221,8 +221,8 @@ static void ComSVSM_TransmitPurple(void)
   }
   if(IsButtonPressed(BUTTON0))
   {
-    //bit pattern transmitted is 
-    //Campers will write there code here
+     //CAMPERS WRITE CODE HERE
+    //bit pattern transmitted is: 
   }
 } /* end ComVSM_TransmitPurple() */
 
@@ -245,11 +245,11 @@ static void ComSVSM_TransmitBlue(void)
   }
      if(IsButtonPressed(BUTTON0))
   {
-    //bit pattern transmitted is 
-    //Campers will write there code here
+     //CAMPERS WRITE CODE HERE
+    //bit pattern transmitted is: 
   }
   
-} /* end ComVSM_TransmitPurple() */
+} /* end ComVSM_TransmitBlue() */
 /*-------------------------------------------------------------------------------------------------------------------*/
 /*Wait for button1 or button2 to be pressed*/
 static void ComSVSM_TransmitCyan(void)          
@@ -269,8 +269,8 @@ static void ComSVSM_TransmitCyan(void)
   }
      if(IsButtonPressed(BUTTON0))
   {
-    //bit pattern transmitted is 
-    //Campers will write there code here
+    //CAMPERS WRITE CODE HERE
+    //bit pattern transmitted is: 
   }
 } /* end ComVSM_TransmitCyan() */
 /*-------------------------------------------------------------------------------------------------------------------*/
@@ -292,8 +292,8 @@ static void ComSVSM_TransmitGreen(void)
   }
      if(IsButtonPressed(BUTTON0))
   {
-    //bit pattern transmitted is 
-    //Campers will write there code here
+    //CAMPERS WRITE CODE HERE
+    //bit pattern transmitted is: 
   }
 } /* end ComVSM_TransmitGreen() */
 /*-------------------------------------------------------------------------------------------------------------------*/
@@ -315,8 +315,8 @@ static void ComSVSM_TransmitYellow(void)
   }
   if(IsButtonPressed(BUTTON0))
   {
-    //bit pattern transmitted is 
-    //Campers will write there code here
+     //CAMPERS WRITE CODE HERE
+    //bit pattern transmitted is: 
   }
 } /* end ComVSM_TransmitYellow() */
 /*-------------------------------------------------------------------------------------------------------------------*/
@@ -338,8 +338,8 @@ static void ComSVSM_TransmitOrange(void)
   }
   if(IsButtonPressed(BUTTON0))
   {
-    //bit pattern transmitted is 
-    //Campers will write there code here
+    //CAMPERS WRITE CODE HERE
+    //bit pattern transmitted is: 
   }
 } /* end ComVSM_TransmitOrange() */
 /*-------------------------------------------------------------------------------------------------------------------*/
@@ -361,8 +361,8 @@ static void ComSVSM_TransmitRed(void)
   }
   if(IsButtonPressed(BUTTON0))
   {
-    //bit pattern transmitted is 
-    //Campers will write there code here
+     //CAMPERS WRITE CODE HERE
+    //bit pattern transmitted is: 
   }
 } /* end ComVSM_TransmitRed() */
 
